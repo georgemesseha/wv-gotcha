@@ -17,7 +17,9 @@ export class Mcq_Walkthroughs extends Mcq<IWalkthrough>
 
     protected get options()
     {
-        return Mcq_Walkthroughs._allWalkthroughs.xSort((w1, w2) => w1.text.localeCompare(w2.text));
+        const wkths = Mcq_Walkthroughs._allWalkthroughs;
+        const sorted = wkths.xSort((w1, w2) => w1.text.xCompareTo(w2.text));
+        return sorted;
     }
 
 }

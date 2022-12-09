@@ -1,9 +1,8 @@
 import chalk from "chalk";
-import { DirectoryInfo } from "decova-filesystem";
 import figlet from "figlet";
-import { UniCircuit } from "./Circuits";
-import { Mcq_YesNo } from "./Mcq_YesNo";
-import { Q } from "./Q";
+import { UniCircuit } from ".";
+import { Dialog } from "./Dialog";
+import { UPathMan } from "./UPathMan";
 const pjson = require('../package.json');
 
 export class UApp extends UniCircuit
@@ -20,7 +19,7 @@ export class UApp extends UniCircuit
         console.log(pjson.version);
         console.log(`PID: ${process.pid}`)
         console.log('........................................');
-        console.log('@' + DirectoryInfo.Current.FullName);
+        console.log('@' + UPathMan.resolve().currentDir.FullName);
         console.log('........................................');
     }
 
@@ -32,8 +31,7 @@ export class UApp extends UniCircuit
         // const promptContinue = new UMcq<string>([`1- Yes`, `0- No`], op => op);
         // const answer = await promptContinue.promptAsync('are you sure?') == `1- Yes`;
 
-        const answer = await Q.YesOrNoAsync('Are you sure?');
-        Q.pickWalkghrough();
+        Dialog.pickWalkghrough();
         
     }
 }

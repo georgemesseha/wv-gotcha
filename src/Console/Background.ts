@@ -1,0 +1,21 @@
+export enum Background
+{
+    bgBlack = 'bgBlack',
+    bgBlackBright = 'bgBlackBright',
+    bgBlue = 'bgBlue',
+    bgBlueBright = 'bgBlueBright',
+    bgCyan = 'bgCyan',
+    bgCyanBright = 'bgCyanBright',
+    bgGray = 'bgGray',
+    bgGreen = 'bgGreen',
+    bgGreenBright = 'bgGreenBright',
+    bgGrey = 'bgGrey',
+    bgMagenta = 'bgMagenta',
+    bgMagentaBright = 'bgMagentaBright',
+    bgRed = 'bgRed',
+    bgRedBright = 'bgRedBright',
+    bgWhite = 'bgWhite',
+    bgWhiteBright = 'bgWhiteBright',
+    bgYellow = 'bgYellow',
+    bgYellowBright = 'bgYellowBright',
+}

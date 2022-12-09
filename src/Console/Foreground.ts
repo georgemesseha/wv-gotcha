@@ -1,0 +1,21 @@
+export enum Foreground
+{
+    black = 'black',
+    blackBright = 'blackBright',
+    blue = 'blue',
+    blueBright = 'blueBright',
+    cyan = 'cyan',
+    cyanBright = 'cyanBright',
+    gray = 'gray',
+    green = 'green',
+    greenBright = 'greenBright',
+    inverse = 'inverse',
+    magenta = 'magenta',
+    magentaBright = 'magentaBright',
+    red = 'red',
+    redBright = 'redBright',
+    white = 'white',
+    whiteBright = 'whiteBright',
+    yellow = 'yellow',
+    yellowBright = 'yellowBright',
+}

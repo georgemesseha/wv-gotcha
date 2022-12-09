@@ -6,16 +6,9 @@ type DlgTextRepresenter<TOption> = (option:TOption)=>string
 
 export abstract class Mcq<TOption>
 {
-    // private _plainOptions: string[] = [];
-
-    // constructor(private _displaySelector:DlgTextRepresenter<TOption>)
-    // {
-    //     // this._plainOptions = this._options.xSelect(op => this._displaySelector(op as TOption)).xWhere(display => !!display);
-    // }
-
-    private get _plainOptions()
+    get _plainOptions()
     {
-        return this.options.xSelect(op => this._displaySelector(op as TOption)).xWhere(display => !!display);
+        return this.options.map(op => this._displaySelector(op as TOption)).filter(display => !!display);
     }
 
     protected abstract get _displaySelector(): DlgTextRepresenter<TOption>;
@@ -25,8 +18,8 @@ export abstract class Mcq<TOption>
     private _filterOptions(options:string[], searchString: string): string[]
     {
         if(!searchString) return options;
-        const keys = searchString.split(" ").xSelect(s => s.trim().toLowerCase())
-        const output = options.xWhere(op => keys.xAll(k => op.toLowerCase().indexOf(k) >= 0));
+        const keys = searchString.split(" ").map(s => s.trim().toLowerCase())
+        const output = options.filter(op => keys.xAll(k => op.toLowerCase().indexOf(k) >= 0));
         return output;
     }
 
@@ -58,6 +51,6 @@ export abstract class Mcq<TOption>
     public async selectAsync(prompt: string): Promise<TOption>
     {
         const selectedPlain = await(this._promptPlainAsync(prompt));
-        return this.options.xFirst(op => this._displaySelector(op) == selectedPlain);
+        return this.options.filter(op => this._displaySelector(op) == selectedPlain)[0];
     }
 }

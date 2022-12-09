@@ -1,6 +1,6 @@
 {
-	"name": "wv-gotcha",
-	"version": "0.0.34",
+	"name": "___PACKAGE_NAME",
+	"version": "0.0.10",
 	"liscense": "",
 	"main": "./dist/index.js",
 	"module": "",
@@ -28,6 +28,7 @@
 		"chalk": "^4.0.0",
 		"decova-dotnet": "^1.1.108",
 		"decova-environment": "0.0.8",
+		"decova-filesystem": "^1.1.62",
 		"decova-gotcha": "^0.1.213",
 		"decova-terminal": "^0.1.76",
 		"figlet": "^1.4.0",
@@ -38,11 +39,7 @@
 		"os": "^0.1.1",
 		"reflect-metadata": "^0.1.13",
 		"require": "^2.4.20",
-		"temp-circuits": "^0.5.3",
-		"tsyringe": "^4.6.0",
-		"wv-filesystem": "^1.1.69",
-		"wv-gotcha": "^0.0.27",
-		"wv-semversion": "^0.1.5"
+		"tsyringe": "^4.6.0"
 	},
 	"bin": {
 		"gx": "./index.js"

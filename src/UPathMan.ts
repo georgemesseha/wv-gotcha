@@ -1,11 +1,14 @@
 import { DirectoryInfo, FileInfo, Path } from "decova-filesystem";
-import { Exception_InvalidProgramState, UniCircuit } from "./Circuits";
+import path from "path";
+import { Exception_InvalidProgramState, UniCircuit } from "temp-circuits";
 
 
-enum CommonFileName
+export enum CommonFileName
 {
     decovaSettings = "decova-settings.json",
-    decovaSnippets = "decova.code-snippets",
+    wvSnippets =  'wv.code-snippets',
+    gitIgnore = '$$$gitignore',
+    tsConfigJson = 'tsconfig.json',
     launch = "launch.json",
     tasksJson = "tasks.json",
     settings = "settings.json",
@@ -18,10 +21,14 @@ enum CommonFileName
 export enum CommonDirName
 {
     vscode = ".vscode",
-    gotcha_main_dir = "decova-gotcha-data",
+    // gotcha_main_dir = "decova-gotcha-data",
     // decova_gotcha_repo = "decova-gotcha-data",
-    text_snippets = "text-snippets"
+    // text_snippets = "text-snippets"
+    Template_RootDir_AnyNodeProject = 'AnyNodeJSProject',
+    Template_RootDir_NewNodeProject = 'NewNodeJSProject',
 }
+
+export const TEMPLATE_PLACEHOLDER = '___TEMPLATE_PLACEHOLDER___';
 
 export class UPathMan extends UniCircuit
 {
@@ -39,14 +46,85 @@ export class UPathMan extends UniCircuit
         return this._UserProfileDir;
     }
 
-    private _GotchaMainDir!: DirectoryInfo;
-    get GotchaMainDir(): DirectoryInfo
+    get mindMapsDir(): DirectoryInfo
     {
-        if(this._GotchaMainDir) return this._GotchaMainDir;
+        return new DirectoryInfo("G:/MyMindMaps");
+    };
 
-        this._GotchaMainDir = new DirectoryInfo(`${this.UserProfileDir.FullName}\\${CommonDirName.gotcha_main_dir}`);
-        this._GotchaMainDir.Ensure();
-        return this._GotchaMainDir;
+
+
+    get xmmapTemplateFile(): FileInfo 
+    {
+        return new FileInfo(Path.join(this.mindMapsDir.FullName, `${TEMPLATE_PLACEHOLDER}.xmmap`));
+    }
+
+    getMindMapFile(documentName: string ): FileInfo
+    {
+        return new FileInfo(Path.join(this.mindMapsDir.FullName, `ggg ${documentName}.xmmap`));
+    }
+
+    // private _GotchaMainDir!: DirectoryInfo;
+    // get GotchaMainDir(): DirectoryInfo
+    // {
+    //     if(this._GotchaMainDir) return this._GotchaMainDir;
+
+    //     this._GotchaMainDir = new DirectoryInfo(`${this.UserProfileDir.FullName}\\${CommonDirName.gotcha_main_dir}`);
+    //     this._GotchaMainDir.Ensure();
+    //     return this._GotchaMainDir;
+    // }
+
+    get distDir(): DirectoryInfo
+    {
+        return new FileInfo(process.argv.xSkip(1).xFirst()).directory;
+    }
+
+    get dstVscodeDir(): DirectoryInfo
+    {
+        return new DirectoryInfo(Path.join(this.currentDir.FullName, CommonDirName.vscode));
+    }
+
+    get dstnWvSnippetsFilePath(): string
+    {
+        return Path.join(this.dstVscodeDir.FullName, CommonFileName.wvSnippets);
+    }
+
+    get dstnGitIgnoreFilePath(): string
+    {
+        return Path.join(this.currentDir.FullName, CommonFileName.gitIgnore);
+    }
+
+    get dstnTsConfigFilePath(): string
+    {
+        return Path.join(this.currentDir.FullName, CommonFileName.tsConfigJson);
+    }
+
+    get mode(): 'dev' | 'prod'
+    {
+        return (this.distDir.Name === 'wv-gotcha')? 'prod' : 'dev';
+    }
+
+    get mainDeploymentDir(): DirectoryInfo
+    {
+        if(this.mode === 'prod') return this.distDir;
+        else return this.distDir.Parent!;
+    }
+
+    get contentDir(): DirectoryInfo
+    {
+        return new DirectoryInfo(path.join(this.mainDeploymentDir.FullName, 'content'));
+    }
+
+    get codeTemplatesDir(): DirectoryInfo
+    {
+        return new DirectoryInfo(path.join(this.contentDir.FullName, `CodeTemplates`));
+    }
+
+
+
+    get templateRootDir_AnyNodeJSProject(): DirectoryInfo
+    {
+        CommonDirName
+        return new DirectoryInfo(path.join(this.contentDir.FullName, `AnyNodeJSProject`));
     }
 
     // static get GotchaLocalDataDir(): DirectoryInfo
@@ -64,18 +142,18 @@ export class UPathMan extends UniCircuit
     //     return new DirectoryInfo(path);
     // }
 
-    get GotchaLocalRepo_Vscode_Dir(): DirectoryInfo
-    {
-        const path = Path.join(this.GotchaMainDir.FullName, CommonDirName.vscode)
-        return new DirectoryInfo(path)
-    }
+    // get GotchaLocalRepo_Vscode_Dir(): DirectoryInfo
+    // {
+    //     const path = Path.join(this.GotchaMainDir.FullName, CommonDirName.vscode)
+    //     return new DirectoryInfo(path)
+    // }
 
-    get GotchaLocalRepo_WalkthroughsSheet(): FileInfo
-    {
+    // get GotchaLocalRepo_WalkthroughsSheet(): FileInfo
+    // {
         
-        const path = Path.join(this.GotchaMainDir.FullName, CommonFileName.WalkthroughsSheet);
-        return new FileInfo(path);
-    }
+    //     const path = Path.join(this.GotchaMainDir.FullName, CommonFileName.WalkthroughsSheet);
+    //     return new FileInfo(path);
+    // }
 
     // static get GotchaLocalRepo_WalkthroughsSchema(): FileInfo
     // {
@@ -83,41 +161,42 @@ export class UPathMan extends UniCircuit
     //     return new FileInfo(path);
     // }
 
-    get GotchaLocalRepo_DecovaSettingsFile(): FileInfo
-    {
-        const path = Path.join(this.GotchaLocalRepo_Vscode_Dir.FullName, CommonFileName.decovaSettings);
-        return new FileInfo(path);
-    }
+    // get GotchaLocalRepo_DecovaSettingsFile(): FileInfo
+    // {
+    //     const path = Path.join(this.GotchaLocalRepo_Vscode_Dir.FullName, CommonFileName.decovaSettings);
+    //     return new FileInfo(path);
+    // }
 
-    get GotchaLocalRepo_DecovaSnippets(): FileInfo
-    {
-        const path = Path.join(this.GotchaLocalRepo_Vscode_Dir.FullName, CommonFileName.decovaSnippets);
-        return new FileInfo(path);
-    }
+    // get GotchaLocalRepo_DecovaSnippets(): FileInfo
+    // {
+    //     const path = Path.join(this.GotchaLocalRepo_Vscode_Dir.FullName, CommonFileName.decovaSnippets);
+    //     return new FileInfo(path);
+    // }
 
     
-    get GotchaLocalRepo_LaunchFile(): FileInfo
-    {
-        const path = Path.join(this.GotchaLocalRepo_Vscode_Dir.FullName, CommonFileName.launch);
-        return new FileInfo(path);
-    }
+    // get GotchaLocalRepo_LaunchFile(): FileInfo
+    // {
+    //     const path = Path.join(this.GotchaLocalRepo_Vscode_Dir.FullName, CommonFileName.launch);
+    //     return new FileInfo(path);
+    // }
 
-    get GotchaLocalRepo_SettingsFile(): FileInfo
-    {
-        const path = Path.join(this.GotchaLocalRepo_Vscode_Dir.FullName, CommonFileName.settings);
-        return new FileInfo(path);
-    }
+    // get GotchaLocalRepo_SettingsFile(): FileInfo
+    // {
+    //     const path = Path.join(this.GotchaLocalRepo_Vscode_Dir.FullName, CommonFileName.settings);
+    //     return new FileInfo(path);
+    // }
 
 
-    get CurrentDir(): DirectoryInfo
+    get currentDir(): DirectoryInfo
     {
-        return DirectoryInfo.Current;
+        if(this.distDir.Name === 'dist') return new DirectoryInfo(`J:/Test_wV_Gotcha_output`);
+        else return DirectoryInfo.Current;
     }
 
 
     get CurrentWorkspace_VsCodeDir(): DirectoryInfo
     {
-        const path = Path.join(this.CurrentDir.FullName, CommonDirName.vscode)
+        const path = Path.join(this.currentDir.FullName, CommonDirName.vscode)
         return new DirectoryInfo(path);
     }
 
@@ -139,11 +218,11 @@ export class UPathMan extends UniCircuit
         return new FileInfo(path);
     }
 
-    get CurrentWorkspace_DecovaSnippets(): FileInfo
-    {
-        const path = Path.join(this.CurrentWorkspace_VsCodeDir.FullName, CommonFileName.decovaSnippets)
-        return new FileInfo(path);
-    }
+    // get CurrentWorkspace_DecovaSnippets(): FileInfo
+    // {
+    //     const path = Path.join(this.CurrentWorkspace_VsCodeDir.FullName, CommonFileName.decovaSnippets)
+    //     return new FileInfo(path);
+    // }
 
     get CurrentWorkspace_Lanuch(): FileInfo
     {
@@ -151,15 +230,15 @@ export class UPathMan extends UniCircuit
         return new FileInfo(path);
     }
 
-    get GotchaLocalRepo_TextSnippets_Dir(): DirectoryInfo
-    {
-        const path = Path.join(this.GotchaLocalRepo_Vscode_Dir.FullName, CommonDirName.text_snippets)
-        return new DirectoryInfo(path);
-    }
+    // get GotchaLocalRepo_TextSnippets_Dir(): DirectoryInfo
+    // {
+    //     const path = Path.join(this.GotchaLocalRepo_Vscode_Dir.FullName, CommonDirName.text_snippets)
+    //     return new DirectoryInfo(path);
+    // }
 
     get CurrentWorkspace_PackageJson(): FileInfo
     {
-        const path = Path.join(this.CurrentDir.FullName, CommonFileName.packgeJson)
+        const path = Path.join(this.currentDir.FullName, CommonFileName.packgeJson)
         return new FileInfo(path);
     }
 
