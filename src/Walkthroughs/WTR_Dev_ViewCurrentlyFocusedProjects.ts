@@ -1,19 +1,18 @@
 import { FileInfo } from "decova-filesystem";
+import { Dialog } from "../Dialog";
 import { UTemplateTranslator } from "../Libraries/TemplateTranslation/UTemplateTranslator";
 import { UPathMan } from "../UPathMan";
 import { IWalkthrough } from "./_Foundation/IWalkthrough";
 import { RegisterWalkthrough } from "./_Foundation/_RegisterWalkthrough";
 
 @RegisterWalkthrough()
-export class WTR_Test implements IWalkthrough
+export class WTR_Dev_ViewCurrentlyFocusedProjects implements IWalkthrough
 {
-    text = `TESTTTTTTTTTTTT`; 
+    text = `Dev >> View currently focused projects`; 
     async execAsync()
     {
-        console.log(UPathMan.$().distDir.FullName);
-        console.warn('toooooooooooooooooot Wallpapers')
-
-        UTemplateTranslator.$().translate(`TestLTools`, f => f.xEndsWith('.ts'), 
-        new Map([['LTool', 'SSOSO__']]));
+        const path = `G:\\_MyProjects\\__CurrentProjects`
+        Dialog.info(`Pleae wait for {${path}} to open`);
+        Dialog.exec(`explorer \"${path}\"`);
     }
 }

@@ -19,7 +19,7 @@ export class WTR_Fun_GrapWallpapers implements IWalkthrough
         const tempDir = new DirectoryInfo(tempDirPath);
         tempDir.ensure();
         
-        Dialog.exec(`explorer \"${tempDir.fullName}\"`);
+        Dialog.exec(`explorer \"${tempDir.fullName.xReplaceAll('/', '\\')}\"`);
 
         const spotListDirPath = Path.join(userHomeDir.fullName, `AppData/Local/Packages/Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy/LocalState/Assets`);
         const bingImagePath = Path.join(userHomeDir.fullName, `/AppData/Roaming/Microsoft/Windows/Themes/TranscodedWallpaper`);

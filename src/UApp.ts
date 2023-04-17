@@ -1,11 +1,12 @@
 import chalk from "chalk";
 import figlet from "figlet";
-import { UniCircuit } from ".";
+import { Circuit, Register, RootCircuit } from "temp-circuits";
 import { Dialog } from "./Dialog";
 import { UPathMan } from "./UPathMan";
 const pjson = require('../package.json');
 
-export class UApp extends UniCircuit
+@Register()
+export class UApp extends RootCircuit
 {
     private showStartupInfo()
     {
@@ -19,7 +20,7 @@ export class UApp extends UniCircuit
         console.log(pjson.version);
         console.log(`PID: ${process.pid}`)
         console.log('........................................');
-        console.log('@' + UPathMan.resolve().currentDir.FullName);
+        console.log('@' + UPathMan.$().currentDir.FullName);
         console.log('........................................');
     }
 

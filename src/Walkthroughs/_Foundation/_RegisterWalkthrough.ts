@@ -1,4 +1,4 @@
-import { Constructor } from "../..";
+import { Constructor } from "temp-circuits";
 import { Mcq_Walkthroughs } from "../../Mcq_Walkthroughs";
 
 export function RegisterWalkthrough():any

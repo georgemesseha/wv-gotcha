@@ -1,23 +1,21 @@
 import { DirectoryInfo, FileInfo } from "decova-filesystem";
 import path from "path";
-import { Circuit, Terminal, UniCircuit } from "../..";
+import { RootCircuit } from "temp-circuits";
+import { Circuit } from "temp-circuits";
+import { Register } from "temp-circuits/dist/Decorators/_Register";
 import { Dialog } from "../../Dialog";
 import { UPathMan } from "../../UPathMan";
 import { UTextTranslator } from "./UTextTranslator";
 
-export class UTemplateTranslator extends UniCircuit
+@Register()
+export class UTemplateTranslator extends RootCircuit
 {
-    @Circuit(()=>UPathMan)
-    private u_PathMan!: UPathMan;
-
-    @Circuit(()=>UTextTranslator)
-    private u_TextTranslator!: UTextTranslator;
-
     translate(srcRootDirPath: string, 
               toTranslateFileSelector: (absPath: string)=>boolean,
-              translationMap: Map<string, string> = new Map()): number
+              translationMap: Map<string, string> = new Map(),
+              overwrite = false): number
     {
-        let absRootSrcDir = path.join(this.u_PathMan.codeTemplatesDir.FullName, 
+        let absRootSrcDir = path.join(UPathMan.$().codeTemplatesDir.FullName, 
                                       srcRootDirPath)
                                 .xReplaceAll('\\', '/');
 
@@ -32,13 +30,13 @@ export class UTemplateTranslator extends UniCircuit
         for(let fPath of filesToTranslate)
         {
             const fSrcRelPath = fPath.xReplaceFirstOccurence(absRootSrcDir, '');
-            let fDstAbsPath = path.join(this.u_PathMan.currentDir.FullName, fSrcRelPath);
+            let fDstAbsPath = path.join(UPathMan.$().currentDir.FullName, fSrcRelPath);
             fDstAbsPath = fDstAbsPath.xReplaceAll('$$$', '.');
 
-            fDstAbsPath = this.u_TextTranslator.translate(fDstAbsPath, translationMap);
+            fDstAbsPath = UTextTranslator.$().translate(fDstAbsPath, translationMap);
 
             
-            if(new FileInfo(fDstAbsPath).exists())
+            if(!overwrite && new FileInfo(fDstAbsPath).exists())
             {
                 Dialog.warning(`File skipped: ${fDstAbsPath}`);  
                 continue;
@@ -46,7 +44,7 @@ export class UTemplateTranslator extends UniCircuit
 
             Dialog.info(`Creating file: ${fDstAbsPath}`)
             const contentToTranslate = new FileInfo(fPath).readAllText();
-            const translatedContent = this.u_TextTranslator.translate(contentToTranslate, translationMap);
+            const translatedContent = UTextTranslator.$().translate(contentToTranslate, translationMap);
             const newFile = new FileInfo(fDstAbsPath);
             newFile.directory.Ensure();
             newFile.writeAllText(translatedContent);

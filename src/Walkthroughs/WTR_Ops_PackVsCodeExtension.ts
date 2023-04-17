@@ -16,7 +16,7 @@ export class WTR_Ops_PackVsCodeExtension implements IWalkthrough
 
     async execAsync()
     {
-        const pathMan = UPathMan.resolve();
+        const pathMan = UPathMan.$();
 
         await Dialog.exec('tsc');
         await new WTR_Ops_AnyNodeJSProject_IncrementPatch().execAsync();

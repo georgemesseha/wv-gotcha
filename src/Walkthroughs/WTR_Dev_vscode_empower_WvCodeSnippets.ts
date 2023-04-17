@@ -9,13 +9,13 @@ import { IWalkthrough } from "./_Foundation/IWalkthrough";
 import { RegisterWalkthrough } from "./_Foundation/_RegisterWalkthrough";
 
 @RegisterWalkthrough()
-export class WTR_Dev_Generatate_AnyNodeJSProject_WvCodeSnippets implements IWalkthrough
+export class WTR_Dev_vscode_empower_WvCodeSnippets implements IWalkthrough
 {
-    text = 'Dev >> Any NodeJS Project >> Generate >> /.vscode/wv.code-snippets';
+    text = 'Dev >> vscode >> empower >> /.vscode/wv.code-snippets';
 
     async execAsync()
     {
-        const pathMan = UPathMan.resolve();
+        const pathMan = UPathMan.$();
 
         if(new FileInfo(pathMan.dstnWvSnippetsFilePath).exists())
         {
@@ -28,7 +28,7 @@ export class WTR_Dev_Generatate_AnyNodeJSProject_WvCodeSnippets implements IWalk
             return new FileInfo(path).name.toLowerCase() === CommonFileName.wvSnippets.toLowerCase();
         }
 
-        const count = UTemplateTranslator.resolve().translate(CommonDirName.Template_RootDir_AnyNodeProject, fileSelector);
+        const count = UTemplateTranslator.$().translate(CommonDirName.Template_RootDir_AnyNodeProject, fileSelector);
 
         Dialog.success(`{${count}} File ${CommonFileName.wvSnippets} has been created.`);
     }

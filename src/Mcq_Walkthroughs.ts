@@ -10,7 +10,7 @@ export class Mcq_Walkthroughs extends Mcq<IWalkthrough>
         this._allWalkthroughs.xAdd(walkthrough);
     }
 
-    protected get _displaySelector(): (option: IWalkthrough) => string
+    protected get _deduceOptionTest(): (option: IWalkthrough) => string
     {
         return option => option.text;
     }

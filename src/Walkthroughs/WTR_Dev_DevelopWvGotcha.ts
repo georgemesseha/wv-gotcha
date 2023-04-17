@@ -1,19 +1,18 @@
 import { FileInfo } from "decova-filesystem";
+import { Dialog } from "../Dialog";
 import { UTemplateTranslator } from "../Libraries/TemplateTranslation/UTemplateTranslator";
 import { UPathMan } from "../UPathMan";
 import { IWalkthrough } from "./_Foundation/IWalkthrough";
 import { RegisterWalkthrough } from "./_Foundation/_RegisterWalkthrough";
 
 @RegisterWalkthrough()
-export class WTR_Test implements IWalkthrough
+export class WTR_Dev_DevelopWvGotcha implements IWalkthrough
 {
-    text = `TESTTTTTTTTTTTT`; 
+    text = `Dev >> Develop wV Gotcha`; 
     async execAsync()
     {
-        console.log(UPathMan.$().distDir.FullName);
-        console.warn('toooooooooooooooooot Wallpapers')
-
-        UTemplateTranslator.$().translate(`TestLTools`, f => f.xEndsWith('.ts'), 
-        new Map([['LTool', 'SSOSO__']]));
+        const path = `G:/_MyProjects/_MyNodeProjects/wv-gotcha`
+        Dialog.info(`Pleae wait for vscode to open`);
+        Dialog.exec(`code \"${path}\"`);
     }
 }

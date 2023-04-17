@@ -15,7 +15,7 @@ export class WTR_Dev_Generatate_NewNodeJSProject_GlobalTool implements IWalkthro
 
     async execAsync()
     {
-        const pathMan = UPathMan.resolve();
+        const pathMan = UPathMan.$();
 
         if(pathMan.currentDir.GetDirectories().xAny() || pathMan.currentDir.GetFiles().xAny())
         {
@@ -27,7 +27,7 @@ export class WTR_Dev_Generatate_NewNodeJSProject_GlobalTool implements IWalkthro
         const ___PACKAGE_NAME = await Dialog.askForTextAsync('Package name?');
 
         const srcDir = Path.join(CommonDirName.Template_RootDir_NewNodeProject, 'GlobalTool');
-        const count = UTemplateTranslator.resolve().translate(srcDir, ()=>true, new Map([['___PACKAGE_NAME', ___PACKAGE_NAME]]));
+        const count = UTemplateTranslator.$().translate(srcDir, ()=>true, new Map([['___PACKAGE_NAME', ___PACKAGE_NAME]]));
 
         Dialog.exec('npm install');
 

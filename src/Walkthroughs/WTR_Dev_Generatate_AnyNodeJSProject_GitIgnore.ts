@@ -15,7 +15,7 @@ export class WTR_Dev_Generatate_AnyNodeJSProject_GitIgnore implements IWalkthrou
 
     async execAsync()
     {
-        const pathMan = UPathMan.resolve();
+        const pathMan = UPathMan.$();
 
         if(new FileInfo(pathMan.dstnGitIgnoreFilePath).exists())
         {
@@ -28,7 +28,7 @@ export class WTR_Dev_Generatate_AnyNodeJSProject_GitIgnore implements IWalkthrou
             return new FileInfo(path).name.toLowerCase() === CommonFileName.gitIgnore.toLowerCase();
         }
 
-        const count = UTemplateTranslator.resolve().translate(CommonDirName.Template_RootDir_AnyNodeProject, fileSelector);
+        const count = UTemplateTranslator.$().translate(CommonDirName.Template_RootDir_AnyNodeProject, fileSelector);
 
         if(count < 1)
         {

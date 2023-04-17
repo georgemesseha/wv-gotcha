@@ -1,6 +1,6 @@
 import { DirectoryInfo, FileInfo, Path } from "decova-filesystem";
+import { Exception_InvalidProgramState, Register, RootCircuit } from "temp-circuits"
 import path from "path";
-import { Exception_InvalidProgramState, UniCircuit } from "temp-circuits";
 
 
 export enum CommonFileName
@@ -30,7 +30,8 @@ export enum CommonDirName
 
 export const TEMPLATE_PLACEHOLDER = '___TEMPLATE_PLACEHOLDER___';
 
-export class UPathMan extends UniCircuit
+@Register()
+export class UPathMan extends RootCircuit
 {
     private _UserProfileDir!: DirectoryInfo;
     get UserProfileDir(): DirectoryInfo

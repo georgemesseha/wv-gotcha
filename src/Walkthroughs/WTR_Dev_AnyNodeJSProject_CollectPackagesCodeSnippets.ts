@@ -15,7 +15,7 @@ export class WTR_Dev_AnyNodeJSProject_CollectPackagesCodeSnippets implements IWa
 
     async execAsync()
     {
-        const pathMan = UPathMan.resolve();
+        const pathMan = UPathMan.$();
 
         const nodeModulesDir = pathMan.currentDir.GetDirectories().xFirstOrNull(d => d.Name === 'node_modules');
         if(!nodeModulesDir)

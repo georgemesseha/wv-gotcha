@@ -12,7 +12,7 @@ export class WTR_Notes_NewMinMap implements IWalkthrough
  
     async execAsync()
     {
-        const pathMan = UPathMan.resolve();
+        const pathMan = UPathMan.$();
 
         let docName!: string;
         while(true)

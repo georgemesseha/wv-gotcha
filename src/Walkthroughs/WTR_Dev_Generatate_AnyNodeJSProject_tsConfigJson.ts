@@ -15,7 +15,7 @@ export class WTR_Dev_Generatate_AnyNodeJSProject_tsConfigJson implements IWalkth
 
     async execAsync()
     {
-        const pathMan = UPathMan.resolve();
+        const pathMan = UPathMan.$();
 
         if(new FileInfo(pathMan.dstnTsConfigFilePath).exists())
         {
@@ -28,7 +28,7 @@ export class WTR_Dev_Generatate_AnyNodeJSProject_tsConfigJson implements IWalkth
             return new FileInfo(path).name.toLowerCase() === CommonFileName.tsConfigJson.toLowerCase();
         }
 
-        const count = UTemplateTranslator.resolve().translate(CommonDirName.Template_RootDir_AnyNodeProject, fileSelector);
+        const count = UTemplateTranslator.$().translate(CommonDirName.Template_RootDir_AnyNodeProject, fileSelector);
 
         if(count < 1)
         {

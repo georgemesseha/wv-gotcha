@@ -15,7 +15,7 @@ export class WTR_Ops_AnyNodeJSProject_IncrementPatch implements IWalkthrough
 
     async execAsync()
     {
-        const pathMan = UPathMan.resolve();
+        const pathMan = UPathMan.$();
         
         const currentDir = pathMan.currentDir.FullName;
         const pkgFile = new FileInfo(Path.join(currentDir, 'package.json'));

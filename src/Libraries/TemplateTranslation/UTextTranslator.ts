@@ -1,6 +1,7 @@
-import { TransientCircuit, UniCircuit } from "../..";
+import { ChildCircuit, Register, RootCircuit } from "temp-circuits";
 
-export class UTextTranslator extends UniCircuit
+@Register()
+export class UTextTranslator extends RootCircuit
 {
     translate(sourceText: string, translationMap: Map<string, string>): string
     {

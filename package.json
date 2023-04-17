@@ -1,6 +1,6 @@
 {
 	"name": "wv-gotcha",
-	"version": "0.0.34",
+	"version": "0.0.63",
 	"liscense": "",
 	"main": "./dist/index.js",
 	"module": "",
@@ -38,10 +38,12 @@
 		"os": "^0.1.1",
 		"reflect-metadata": "^0.1.13",
 		"require": "^2.4.20",
-		"temp-circuits": "^0.5.3",
+		"temp-circuits": "^0.5.25",
 		"tsyringe": "^4.6.0",
-		"wv-filesystem": "^1.1.69",
-		"wv-gotcha": "^0.0.27",
+		"wv-circuit-bench-contracts": "^1.0.99",
+		"wv-filesystem": "^1.1.80",
+		"wv-gotcha": "0.0.59",
+		"wv-local-service": "^0.0.71",
 		"wv-semversion": "^0.1.5"
 	},
 	"bin": {

@@ -43,7 +43,7 @@ export class Dialog
         console.log(custom(text));
     }
 
-    static exec(cmd:string):void
+    static exec(cmd:string, currentDir: string|null = null):void
     {
         console.log
         (
@@ -56,12 +56,12 @@ export class Dialog
 
         if(process.platform === 'win32')
         {
-            cp.spawnSync(cmd, [], {cwd: UPathMan.resolve().currentDir.FullName, 
+            cp.spawnSync(cmd, [], {cwd: currentDir ?? UPathMan.$().currentDir.FullName, 
                                    stdio:'inherit', shell:"cmd.exe"});
         }
         else
         {
-            cp.spawnSync(cmd, [], {cwd: UPathMan.resolve().currentDir.FullName, 
+            cp.spawnSync(cmd, [], {cwd: currentDir ?? UPathMan.$().currentDir.FullName, 
                                    stdio:'inherit', shell:"/bin/sh"});
         }
 

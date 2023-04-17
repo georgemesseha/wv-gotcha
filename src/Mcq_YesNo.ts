@@ -4,7 +4,7 @@ import { Mcq } from "./Mcq";
 
 export class Mcq_YesNo extends Mcq<boolean>
 {
-    protected get _displaySelector(): (option: boolean) => string
+    protected get _deduceOptionTest(): (option: boolean) => string
     {
         return (option: boolean) =>
         {
