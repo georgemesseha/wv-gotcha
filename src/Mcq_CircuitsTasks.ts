@@ -18,6 +18,7 @@ class Mcq_Code extends Mcq<IWalkthrough>
         new WTR_Code_Gotcha(),
         new WTR_Code_LocalService(),
         new WTR_Code_LocalBroker(),
+        new WTR_Code_ExtensionResources(),
     ];
 }
 
@@ -54,7 +55,18 @@ class WTR_Code_Circuits implements IWalkthrough
     text = `Code Circuits`; 
     async execAsync()
     {
-        const path = `G:/_MyProjects/_MyNodeProjects/wv-circuits`
+        const path = `G:/_MyProjects/_MyNodeProjects/_FinalCircuits/wv-circuits`
+        Dialog.info(`Please wait for vscode to open`);
+        Dialog.exec(`code \"${path}\"`);
+    }
+}
+
+class WTR_Code_ExtensionResources implements IWalkthrough
+{
+    text = `Extension Resources`; 
+    async execAsync()
+    {
+        const path = `G:/_MyProjects/_MyNodeProjects/_FinalCircuits/circuit-bench-site/vscode-extension-resources`
         Dialog.info(`Please wait for vscode to open`);
         Dialog.exec(`code \"${path}\"`);
     }
