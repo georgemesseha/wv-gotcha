@@ -1,0 +1,25 @@
+{
+    "mappings": [
+        {
+            "title": ".net >> Web RESTful API >> Clean Architecture >> Generate Full Solution",
+            "translationItems": [
+                {
+                    "itemType": "folder",
+                    "relativePath": ""
+                }
+            ],
+            "fileRelPathPatternsToIgnore": [
+
+            ]
+        },
+        {
+            "title": ".net >> Web RESTful API >> Clean Architecture >> Add Service",
+            "translationItems": [
+                {
+                    "itemType": "file",
+                    "relativePath": "___Service/___Service.cs"
+                }
+            ]
+        }
+    ]
+}

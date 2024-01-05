@@ -12,4 +12,14 @@ export class UTextTranslator extends RootCircuit
 
         return sourceText;
     }
+
+    translateGenericTemplateFile(sourceText: string, translationDictionary: {from: string, to: string}[]): string
+    {
+        for(let pair of translationDictionary)
+        {
+            sourceText = sourceText.xReplaceAll(pair.from, pair.to);
+        }
+
+        return sourceText;
+    }
 }

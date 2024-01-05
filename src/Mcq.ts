@@ -15,10 +15,10 @@ export abstract class Mcq<TOption>
 
     private get _plainOptions()
     {
-        return this.options.xSelect(op => this._deduceOptionTest(op as TOption)).xWhere(display => !!display);
+        return this.options.xSelect(op => this._deduceOptionText(op as TOption)).xWhere(display => !!display);
     }
 
-    protected abstract get _deduceOptionTest(): DlgTextRepresenter<TOption>;
+    protected abstract get _deduceOptionText(): DlgTextRepresenter<TOption>;
 
     protected abstract options: TOption[]
 
@@ -58,6 +58,6 @@ export abstract class Mcq<TOption>
     public async selectAsync(prompt: string): Promise<TOption>
     {
         const selectedPlain = await(this._promptPlainAsync(prompt));
-        return this.options.xFirst(op => this._deduceOptionTest(op) == selectedPlain);
+        return this.options.xFirst(op => this._deduceOptionText(op) == selectedPlain);
     }
 }

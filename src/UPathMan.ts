@@ -14,7 +14,8 @@ export enum CommonFileName
     settings = "settings.json",
     packgeJson = "package.json",
     WalkthroughsSheet = "walkthroughs_sheet.json",
-    WalkthroughsSchema = "walkthroughs_schema.json"
+    WalkthroughsSchema = "walkthroughs_schema.json",
+    translationMap = 'translationMap.json',
 }
 
 
@@ -25,7 +26,10 @@ export enum CommonDirName
     // decova_gotcha_repo = "decova-gotcha-data",
     // text_snippets = "text-snippets"
     Template_RootDir_AnyNodeProject = 'AnyNodeJSProject',
+    Template_RootDir_AnyDotNetProject = 'AnyDotNetProject',
     Template_RootDir_NewNodeProject = 'NewNodeJSProject',
+    Template_RootDir_NewCleanArchitectureSolution = 'CleanArchitectureService',
+    GenericGenTemplates = 'GenericGenTemplates'
 }
 
 export const TEMPLATE_PLACEHOLDER = '___TEMPLATE_PLACEHOLDER___';
@@ -52,7 +56,10 @@ export class UPathMan extends RootCircuit
         return new DirectoryInfo("G:/MyMindMaps");
     };
 
-
+    get genericGenTemplates(): DirectoryInfo
+    {
+        return new DirectoryInfo(Path.join(this.contentDir.FullName, CommonDirName.GenericGenTemplates))
+    }
 
     get xmmapTemplateFile(): FileInfo 
     {
@@ -120,7 +127,10 @@ export class UPathMan extends RootCircuit
         return new DirectoryInfo(path.join(this.contentDir.FullName, `CodeTemplates`));
     }
 
-
+    get genericGenDirTemplates(): DirectoryInfo
+    {
+        return new DirectoryInfo(path.join(this.contentDir.FullName, CommonDirName.GenericGenTemplates))
+    }
 
     get templateRootDir_AnyNodeJSProject(): DirectoryInfo
     {

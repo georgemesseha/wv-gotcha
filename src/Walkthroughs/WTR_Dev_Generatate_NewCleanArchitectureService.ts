@@ -11,7 +11,7 @@ import { RegisterWalkthrough } from "./_Foundation/_RegisterWalkthrough";
 @RegisterWalkthrough()
 export class WTR_Dev_Generatate_NewNodeJSProject_GlobalTool implements IWalkthrough
 {
-    text = 'Dev >> New NodeJS Project >> Generate >> New Global Tool';
+    text = 'Dev >> New .net Solution >> Generate >> New Clean Architecture Service';
 
     async execAsync()
     {
@@ -23,12 +23,12 @@ export class WTR_Dev_Generatate_NewNodeJSProject_GlobalTool implements IWalkthro
             return;
         }
 
-        const ___PACKAGE_NAME = await Dialog.askForTextAsync('Package name?');
+        const __TestFile_ = await Dialog.askForTextAsync('__TestFile_?');
 
-        const srcDir = Path.join(CommonDirName.Template_RootDir_NewNodeProject, 'GlobalTool');
-        const count = UTemplateTranslator.$().translate(srcDir, ()=>true, new Map([['___PACKAGE_NAME', ___PACKAGE_NAME]]));
+        const srcDir = Path.join(CommonDirName.Template_RootDir_NewCleanArchitectureSolution);
+        const count = UTemplateTranslator.$().translate(srcDir, ()=>true, new Map([['__TestFile_', __TestFile_]]));
 
-        Dialog.exec('npm install');
+        // Dialog.exec('npm install');
 
         Dialog.success(`{${count}} files has been created.`);
     }

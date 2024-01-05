@@ -135,9 +135,15 @@ export class Dialog
         this.exec(`explorer \"${dirPath}\"`);
     }
 
-    static async hintWillExec(hint: string)
+    static hintWillExec(hint: string)
     {
-        let x = await inquirer.prompt([{name:"foo", message:ch.bgYellow.black(`>>> ${hint}`)}]).then();
-        return x.foo;
+        console.log(ch.bgYellow.black(`>>> ${hint}`));
+        // let x = await inquirer.prompt([{name:"foo", message:ch.bgYellow.black(`>>> ${hint}`)}]).then();
+        // return x.foo;
+    }
+
+    static async promptContinueAsync()
+    {
+        await inquirer.prompt([{name:"foo", message:ch.bgMagenta.white(`>>> Press "ENTER" to continue`)}]).then();
     }
 }

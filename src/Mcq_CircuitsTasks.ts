@@ -4,11 +4,12 @@ import { IWalkthrough } from "./Walkthroughs/_Foundation/IWalkthrough";
 
 class Mcq_Code extends Mcq<IWalkthrough>
 {
-    protected get _deduceOptionTest(): (option: IWalkthrough) => string
+    protected get _deduceOptionText(): (option: IWalkthrough) => string
     {
         return option => option.text;
     }
     protected options = [
+        new WTR_CodeWvCore(),
         new WTR_Code_Circuits(),
         new WTR_Code_AngularSample(),
         new WTR_Code_ReactSample(),
@@ -25,7 +26,7 @@ class Mcq_Code extends Mcq<IWalkthrough>
 
 export class Mcq_CircuitsTasks extends Mcq<IWalkthrough>
 {
-    protected get _deduceOptionTest(): (option: IWalkthrough) => string
+    protected get _deduceOptionText(): (option: IWalkthrough) => string
     {
         return (option: IWalkthrough) =>
         {
@@ -52,10 +53,10 @@ class WTR_Code implements IWalkthrough
 
 class WTR_Code_Circuits implements IWalkthrough
 {
-    text = `Code Circuits`; 
+    text = `Code dotWire`; 
     async execAsync()
     {
-        const path = `G:/_MyProjects/_MyNodeProjects/_FinalCircuits/wv-circuits`
+        const path = `G:/_MyProjects/_MyNodeProjects/_FinalCircuits/dotwire`
         Dialog.info(`Please wait for vscode to open`);
         Dialog.exec(`code \"${path}\"`);
     }
@@ -172,7 +173,7 @@ class WTR_BuildView implements IWalkthrough
 
     execAsync(): Promise<void>
     {
-        Dialog.exec('npm run build', 'G:/_MyProjects/_MyNodeProjects/_FinalCircuits/extension-view');
+        Dialog.exec('npm run deploy', 'G:/_MyProjects/_MyNodeProjects/_FinalCircuits/extension-view');
 
         return Promise.resolve();
     }
@@ -186,6 +187,19 @@ class WTR_RunTempBroker implements IWalkthrough
     execAsync(): Promise<void>
     {
         Dialog.exec('node ./dist/run',`G:/_MyProjects/_MyNodeProjects/wv-local-service-broker`);
+
+        return Promise.resolve();
+    }
+    
+}
+
+class WTR_CodeWvCore implements IWalkthrough
+{
+    text = 'Code wv_core';
+
+    execAsync(): Promise<void>
+    {
+        Dialog.exec('code .',`G:/_MyProjects/_MyDenoProjects/wv_core/wv_core`);
 
         return Promise.resolve();
     }
