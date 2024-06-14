@@ -63,4 +63,4 @@
     "fileRelPathPatternsToIgnore": []
 }
 ```
-On purpose merge conflict line
+Chaned on local master
