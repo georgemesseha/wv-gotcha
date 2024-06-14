@@ -59,7 +59,7 @@ export class WTR_GenericGen implements IWalkthrough
                     if(isTranslated) count ++;
                     break;
                 case "folder":
-                    const folder = new DirectoryInfo(translationItem.relativePath);
+                    const folder = new DirectoryInfo(Path.join(UPathMan.$().contentDir.FullName));
                     if(folder.Exists() === false) 
                     {
                         Dialog.error(`Folder '${translationItem.relativePath}' doesn't exist!`)

@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import figlet from "figlet";
-import { Circuit, Register, RootCircuit } from "temp-circuits";
+import { Register, RootCircuit } from "temp-circuits";
 import { Dialog } from "./Dialog";
 import { UPathMan } from "./UPathMan";
 const pjson = require('../package.json');
