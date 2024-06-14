@@ -1,7 +1,6 @@
 import { DirectoryInfo, FileInfo } from "decova-filesystem";
 import path from "path";
 import { Regex, RootCircuit } from "temp-circuits";
-import { Circuit } from "temp-circuits";
 import { Register } from "temp-circuits/dist/Decorators/_Register";
 import { Dialog } from "../../Dialog";
 import { UPathMan } from "../../UPathMan";
@@ -49,7 +48,7 @@ export class UTemplateTranslator extends RootCircuit
 
     private async _ensurePlaceholderValuesAsync(text: string, translationDictionary: {from: string, to: string}[])
     {
-        const placehoderMatches = Regex.of(/___[0-9A-z\$_]+/g).getMatches(text);
+        const placehoderMatches = Regex.of(/___[0-9A-z\$_]+___/g).getMatches(text);
         for(let placeholderMatch of placehoderMatches)
         {
             const existing = translationDictionary.xFirstOrDefault(i => i.from === placeholderMatch.value);
@@ -89,7 +88,7 @@ export class UTemplateTranslator extends RootCircuit
             
             if(!overwrite && new FileInfo(fDstAbsPath).exists())
             {
-                Dialog.warning(`File skipped: ${fDstAbsPath}`);  
+                Dialog.warning(`File skipped (It already exists): ${fDstAbsPath}`);  
                 continue;
             } 
 

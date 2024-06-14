@@ -1,4 +1,0 @@
-class ___TestFile_
-{
-    
-}

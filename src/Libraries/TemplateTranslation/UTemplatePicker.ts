@@ -1,7 +1,6 @@
 import { DirectoryInfo, FileInfo } from "decova-filesystem";
 import path from "path";
 import { RootCircuit } from "temp-circuits";
-import { Circuit } from "temp-circuits";
 import { Register } from "temp-circuits/dist/Decorators/_Register";
 import { Dialog } from "../../Dialog";
 import { CommonFileName, UPathMan } from "../../UPathMan";
