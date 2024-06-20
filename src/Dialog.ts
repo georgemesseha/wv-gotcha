@@ -55,6 +55,19 @@ export class Dialog
             ch.green.bold(`>> ${cmd}`)
         );
 
+        // TODO: Commented out for some problem. Revise if needed
+        // if(process.platform === 'win32')
+        //     {
+        //         cp.spawnSync(cmd, [], {cwd: currentDir ?? UPathMan.$().currentDir.FullName, 
+        //                                stdio:'inherit', shell:"cmd.exe"});
+        //     }
+        //     else
+        //     {
+        //         cp.spawnSync(cmd, [], {cwd: currentDir ?? UPathMan.$().currentDir.FullName, 
+        //                                stdio:'inherit', shell:"/bin/sh"});
+        //     }
+    
+
 
             const program = new Command();
             cp.exec(cmd, (error, stdout, stderr) => {
