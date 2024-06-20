@@ -26,6 +26,7 @@
 	],
 	"dependencies": {
 		"chalk": "^4.0.0",
+		"commander": "^12.1.0",
 		"decova-dotnet": "^1.1.108",
 		"decova-environment": "0.0.8",
 		"decova-gotcha": "^0.1.213",

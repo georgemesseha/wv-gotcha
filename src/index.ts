@@ -8,4 +8,5 @@ import { UTemplateTranslator } from "./Libraries/TemplateTranslation/UTemplateTr
 import { Motherboard } from "temp-circuits";
 import './UApp';
 
+
 Motherboard.powerOn('');

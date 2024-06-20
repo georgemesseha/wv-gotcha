@@ -4,6 +4,7 @@ import { Mcq_YesNo } from "./Mcq_YesNo";
 import ch from "chalk";
 import inquirer from "inquirer";
 import * as cp from "child_process";
+import { Command } from "commander";
 import { UPathMan } from "./UPathMan";
 
 export class Dialog
@@ -54,16 +55,22 @@ export class Dialog
             ch.green.bold(`>> ${cmd}`)
         );
 
-        if(process.platform === 'win32')
-        {
-            cp.spawnSync(cmd, [], {cwd: currentDir ?? UPathMan.$().currentDir.FullName, 
-                                   stdio:'inherit', shell:"cmd.exe"});
-        }
-        else
-        {
-            cp.spawnSync(cmd, [], {cwd: currentDir ?? UPathMan.$().currentDir.FullName, 
-                                   stdio:'inherit', shell:"/bin/sh"});
-        }
+
+            const program = new Command();
+            cp.exec(cmd, (error, stdout, stderr) => {
+                console.log(stdout)
+                if (error) {
+                  console.error(`Error executing command: ${error.message}`);
+                  return;
+                }
+                if (stderr) {
+                  console.error(`stderr: ${stderr}`);
+                  throw `Execution terminated due to the logged error`;
+                }
+                console.log(`stdout: ${stdout}`);
+              });
+            // cp.execSync(cmd, [], {cwd: currentDir ?? UPathMan.$().currentDir.FullName, 
+            //                        stdio:'inherit', shell:"cmd.exe"});
 
         console.log
         (
