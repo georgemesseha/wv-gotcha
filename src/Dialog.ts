@@ -4,8 +4,8 @@ import { Mcq_YesNo } from "./Mcq_YesNo";
 import ch from "chalk";
 import inquirer from "inquirer";
 import * as cp from "child_process";
-import { Command } from "commander";
 import { UPathMan } from "./UPathMan";
+import * as shell from "shelljs";
 
 export class Dialog
 {
@@ -44,89 +44,61 @@ export class Dialog
         console.log(custom(text));
     }
 
-    static exec(cmd:string, currentDir: string|null = null):void
+    static exec(cmd: string, currentDir: string | null = null): void
     {
         console.log
-        (
-            ch.bgBlack.blackBright(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        );
+            (
+                ch.bgBlack.blackBright(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            );
         console.log
-        (
-            ch.green.bold(`>> ${cmd}`)
-        );
+            (
+                ch.green.bold(`>> ${cmd}`)
+            );
 
-        // TODO: Commented out for some problem. Revise if needed
-        // if(process.platform === 'win32')
-        //     {
-        //         cp.spawnSync(cmd, [], {cwd: currentDir ?? UPathMan.$().currentDir.FullName, 
-        //                                stdio:'inherit', shell:"cmd.exe"});
-        //     }
-        //     else
-        //     {
-        //         cp.spawnSync(cmd, [], {cwd: currentDir ?? UPathMan.$().currentDir.FullName, 
-        //                                stdio:'inherit', shell:"/bin/sh"});
-        //     }
-    
-
-
-            const program = new Command();
-            cp.exec(cmd, (error, stdout, stderr) => {
-                console.log(stdout)
-                if (error) {
-                  console.error(`Error executing command: ${error.message}`);
-                  return;
-                }
-                if (stderr) {
-                  console.error(`stderr: ${stderr}`);
-                  throw `Execution terminated due to the logged error`;
-                }
-                console.log(`stdout: ${stdout}`);
-              });
-            // cp.execSync(cmd, [], {cwd: currentDir ?? UPathMan.$().currentDir.FullName, 
-            //                        stdio:'inherit', shell:"cmd.exe"});
+        const child = cp.spawnSync(cmd, [], { stdio: 'inherit', shell: true });
 
         console.log
-        (
-            ch.bgBlack.blackBright("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-        );
+            (
+                ch.bgBlack.blackBright("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+            );
     }
 
-    static async instructAsync(instruction: string, ackMessage: string|null = null)
+    static async instructAsync(instruction: string, ackMessage: string | null = null)
     {
         console.log(ch.yellowBright.bold(`♣ ${instruction}`));
-        if(ackMessage !== null)
+        if (ackMessage !== null)
         {
-            await inquirer.prompt([{name:"foo", message:ackMessage}]);
+            await inquirer.prompt([{ name: "foo", message: ackMessage }]);
         }
     }
 
     static error(error: string)
     {
-        this.log(`! ${error}`, Foreground.redBright, 
-                                          Background.bgBlack, 
-                                          1, 
-                                          true, 
-                                          true, 
-                                          false, 
-                                          true);
+        this.log(`! ${error}`, Foreground.redBright,
+            Background.bgBlack,
+            1,
+            true,
+            true,
+            false,
+            true);
     }
 
     static warning(message: string)
     {
-        this.log(`! ${message}`, Foreground.magentaBright, 
-        Background.bgBlack, 
-        1, 
-        true, 
-        true, 
-        false, 
-        true);  
+        this.log(`! ${message}`, Foreground.magentaBright,
+            Background.bgBlack,
+            1,
+            true,
+            true,
+            false,
+            true);
     }
 
     static info(info: string)
     {
         console.log(ch.bgYellowBright.green(` i: ${info} `));
     }
-    
+
     static success(message: string)
     {
         console.log(ch.bgGreen.white(` ☺ ${message} `));
@@ -134,19 +106,19 @@ export class Dialog
 
     private static _showQuestion(question: string)
     {
-        this.log(question, Foreground.magentaBright, 
-                                          Background.bgBlack, 
-                                          1, 
-                                          true, 
-                                          true, 
-                                          false, 
-                                          true);
+        this.log(question, Foreground.magentaBright,
+            Background.bgBlack,
+            1,
+            true,
+            true,
+            false,
+            true);
     }
 
     static async askForTextAsync(question: string)
     {
         // this._showQuestion(question);
-        let x = await inquirer.prompt([{name:"foo", message:question}]).then();
+        let x = await inquirer.prompt([{ name: "foo", message: question }]).then();
         return x.foo;
     }
 
@@ -164,6 +136,6 @@ export class Dialog
 
     static async promptContinueAsync()
     {
-        await inquirer.prompt([{name:"foo", message:ch.bgMagenta.white(`>>> Press "ENTER" to continue`)}]).then();
+        await inquirer.prompt([{ name: "foo", message: ch.bgMagenta.white(`>>> Press "ENTER" to continue`) }]).then();
     }
 }
