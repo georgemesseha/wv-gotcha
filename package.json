@@ -1,6 +1,6 @@
 {
 	"name": "wv-gotcha",
-	"version": "0.0.84",
+	"version": "0.0.86",
 	"liscense": "",
 	"main": "./dist/index.js",
 	"module": "",
