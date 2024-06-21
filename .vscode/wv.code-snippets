@@ -15,7 +15,7 @@
         ]
     },
     "VSCode create Quick Option Picker": {
-        "prefix": "*vscode.QuickPicker",
+        "prefix": "*vscode.QuickPicker", 
         "body": [
             "const options = new List<QuickOption>(",
             "[",

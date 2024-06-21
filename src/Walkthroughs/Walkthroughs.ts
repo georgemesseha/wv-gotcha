@@ -9,6 +9,7 @@ import { DirectoryInfo, FileInfo, Path } from "decova-filesystem";
 import { Mcq_CircuitsTasks } from "../Mcq_CircuitsTasks";
 import { PackageJson } from "../Libraries/PackageJson/PackageJson";
 import { DirectoryInfo as wvDirectoryInfo, FileInfo as wvFileInfo, Path as wvPath } from "wv-filesystem";
+    
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -706,6 +707,31 @@ export class WTR_UpdateRemoteOrigin implements IWalkthrough
     {
         const url = await Dialog.askForTextAsync("The new origin URL?")
         Dialog.exec(`git remote set-url origin ${url}`);
+    }
+}
+// #endregion
+
+// #region vscode >> Create custom snippet from existing code
+@RegisterWalkthrough()
+export class WTR_CreateCustomSnippet implements IWalkthrough
+{
+    text = 'vscode >> Create custom snippet from existing code';
+    async execAsync()
+    {
+        await Dialog.warning("Recall: Your naming convetion of the prefix is * followed by a descriptive name");
+        await Dialog.warning("Give a Title but don't worry about the Description");
+        await Dialog.instructAsync("Select the code you want to create a snippet from.");
+        await Dialog.instructAsync("Ctrl + Shift + P -> Convert to a snippet");
+        await Dialog.instructAsync("Follow the steps");
+        await Dialog.instructAsync("Copy the snippet from the output window.");
+        await Dialog.promptContinueAsync();
+        await Dialog.instructAsync("Ctrl + Shift + P -> Configure user snippets");
+        await Dialog.instructAsync("Select GSnippets.codesnippets");
+        await Dialog.promptContinueAsync();
+        await Dialog.instructAsync("Paste your snippet in GSnippets.codesnippets");
+        await Dialog.promptContinueAsync();
+        await Dialog.instructAsync(`Find syntax for editing placeholders here: "https://www.notion.so/vscode-code-snippets-syntax-06411fd9411549c4aadbe118e100f682?pvs=4"`);
+
     }
 }
 // #endregion
