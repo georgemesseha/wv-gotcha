@@ -1,22 +1,21 @@
-    {
-    "Terminal Mcq Prompt":{
-        "prefix": "ss.terminal.mcq", // the snippet suggestion code editor show up for you.
+{
+    "Terminal Mcq Prompt": {
+        "prefix": "*terminal.mcq", // the snippet suggestion code editor show up for you.
         "body": [ // contains the code lines.
             "// npm install --save decova-terminal",
             "// import { CurrentTerminal as Terminal } from \"decova-terminal/CurrentTerminal\";",
-            
             "let ops = { ${1:option1}: '${2:option1 text}'};",
             "let op = await Terminal.McqAsync('${0:question}', ops);",
             "switch(op)",
             "{",
-                "\tcase ops.${1:option1}:",
-                "\t\tconsole.log('ops.${1:option1}');",
-                "\t\tbreak;",
+            "\tcase ops.${1:option1}:",
+            "\t\tconsole.log('ops.${1:option1}');",
+            "\t\tbreak;",
             "}"
         ]
     },
     "VSCode create Quick Option Picker": {
-        "prefix": "ss.vscode.QuickPicker",
+        "prefix": "*vscode.QuickPicker", 
         "body": [
             "const options = new List<QuickOption>(",
             "[",
@@ -40,7 +39,22 @@
             "})",
             "});",
         ]
+    },
+    "Create a new Walkthrough in wv-gotcha": {
+        "prefix": "*walkthrough",
+        "body": [
+            "// #region ${1:Walkthrough user friendly title}",
+            "@RegisterWalkthrough()",
+            "export class WTR_${2:Walkthrough class name} implements IWalkthrough",
+            "{",
+            "    text = '${1}'",
+            "    async execAsync()",
+            "    {",
+            "        // your execution",
+            "    }",
+            "}",
+            "// #endregion"
+        ],
+        "description": "Creates a new Walkthrough in wv-gotcha tool"
     }
 }
-
-
