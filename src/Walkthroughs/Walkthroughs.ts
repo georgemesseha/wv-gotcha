@@ -672,11 +672,11 @@ export class WTR_Ops_PackVsCodeExtension implements IWalkthrough
 }
 // #endregion
 
-// #region regionName
+// #region Git >> Ammend all work tree changes
 @RegisterWalkthrough()
-export class WTR_AmmendAll implements IWalkthrough
+export class WTR_AmmendAllWorktreeChanges implements IWalkthrough
 {
-    text = 'Git >> Ammend all';
+    text = 'Git >> Ammend all work tree changes';
     async execAsync()
     {
         Dialog.exec("git add .");
@@ -684,3 +684,30 @@ export class WTR_AmmendAll implements IWalkthrough
     }
 }
 // #endregion
+
+// #region Git >> List remote repos
+@RegisterWalkthrough()
+export class WTR_AmmendAll implements IWalkthrough
+{
+    text = 'Git >> List remote repos';
+    async execAsync()
+    {
+        Dialog.exec("git remote -v");
+    }
+}
+// #endregion
+
+// #region Git >> Update remote origin
+@RegisterWalkthrough()
+export class WTR_UpdateRemoteOrigin implements IWalkthrough
+{
+    text = 'Git >> Change remote origin';
+    async execAsync()
+    {
+        const url = await Dialog.askForTextAsync("The new origin URL?")
+        Dialog.exec(`git remote set-url origin ${url}`);
+    }
+}
+// #endregion
+
+
