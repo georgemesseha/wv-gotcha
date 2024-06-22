@@ -827,8 +827,6 @@ export class WTR_GitCreateDeltaBranch implements IWalkthrough
         
         let destBranch = await new DynamicMcq(destBranchs).selectAsync("Select destination brance");
 
-        Shell.terminate("Dev break");
-
         const deltaBranchName = `delta_${sourceBranch}_${destBranch}_${Shell.getTimeStamp()}`;
 
         await Shell.warning(`The following branches will be overwritten by the origin:`);
