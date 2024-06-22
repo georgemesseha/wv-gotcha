@@ -857,7 +857,8 @@ export class WTR_GitCreateDeltaBranch implements IWalkthrough
         await Shell.confirmThenExecAsync(`git checkout ${deltaBranchName}`, `Will check out the delta branch`);
         await Shell.confirmThenExecAsync(`git merge -s ours ${destBranch}`, `Will merge the destination branch ${destBranch} into the delta branch favoring the delta branch.`);
 
-        await Shell.confirmThenExecAsync(`git push`, `Will push ${deltaBranchName} for making a pull request of it to ${destBranch}`);
+        // git push --set-upstream origin delta_master
+        await Shell.confirmThenExecAsync(`git push --set-upstream origin ${deltaBranchName}`, `Will push ${deltaBranchName} for making a pull request of it to ${destBranch}`);
         await Shell.instructAsync(`I'm opening the remote repo in the browser for you to create a pull request of ${deltaBranchName} into ${destBranch}`);
         Shell.ShowCompletion();
     }
