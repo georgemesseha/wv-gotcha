@@ -831,7 +831,7 @@ export class WTR_GitCreateDeltaBranch implements IWalkthrough
 
         while(true)
         {
-            destBranch = (await Shell.askForTextAsync("What is the destination branch?")).toLowerCase();
+            destBranch = (await Shell.askForTextAsync("What is the destination branch?")).toLowerCase().trim();
             
             if(actualBranches.indexOf(destBranch) < 0)
             {
