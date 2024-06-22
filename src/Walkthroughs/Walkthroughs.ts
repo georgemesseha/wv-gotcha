@@ -841,13 +841,18 @@ export class WTR_GitCreateDeltaBranch implements IWalkthrough
             break;
         }
 
+        const deltaBranchName = `delta_${sourceBranch}_${destBranch}_${Shell.getTimeStamp()}`;
+        console.log(deltaBranchName);
+
+        Shell.terminate("Check point");
+
         await Shell.assert(`The following branches will be overwritten by the origin:   ${sourceBranch} , ${destBranch}`);
         
         await Shell.confirmThenExecAsync("git fetch origin", `Will fetch the origin of the current branch  ${sourceBranch}`);
         await Shell.confirmThenExecAsync(`git reset --hard origin/${sourceBranch}`, `This will reset the local branch ${sourceBranch} to match the origin!`)
         
 
-        const deltaBranchName = `delta_${sourceBranch}_${destBranch}_${Shell.getTimeStamp()}`;
+        
         await Shell.confirmThenExecAsync(`git checkout -b ${deltaBranchName}`, `Will create a delta branch ${deltaBranchName} based on the current branch [The source branch]`);
 
         await Shell.confirmThenExecAsync(`git checkout ${destBranch}`, `Will check out the destination branch ${destBranch} for updating it.`);
