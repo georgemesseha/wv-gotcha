@@ -1,6 +1,6 @@
 import { Background, Foreground } from "decova-terminal";
 import { Mcq_Walkthroughs } from "./Mcq_Walkthroughs";
-import { Mcq_YesNo } from "./Mcq_YesNo";
+import { Mcq_AreYouDeadSure, Mcq_YesNo } from "./Mcq_YesNo";
 import ch from "chalk";
 import inquirer from "inquirer";
 import * as cp from "child_process";
@@ -14,6 +14,8 @@ export class Shell
     {
         return await new Mcq_YesNo().selectAsync(question);
     }
+
+    
 
     static async pickWalkghrough()
     {
@@ -111,6 +113,12 @@ export class Shell
             true);
     }
 
+    static terminate(error: string)
+    {
+        Shell.error(error);
+        process.exit(0);
+    }
+
     static warning(message: string)
     {
         this.log(`! ${message}`, Foreground.magentaBright,
@@ -120,6 +128,15 @@ export class Shell
             true,
             false,
             true);
+    }
+
+    static async assert(message: string)
+    {
+        console.log(ch.bgRedBright.yellow("You must be dead sure before answering the following:"));
+        const dlg = new Mcq_AreYouDeadSure();
+        const confirmed = await dlg.selectAsync(message);
+
+        if(!confirmed) this.terminate("The execution terminated by the user!");
     }
 
     static info(info: string)
@@ -167,9 +184,9 @@ export class Shell
         await inquirer.prompt([{ name: "foo", message: ch.bgMagenta.white(`>>> Press "ENTER" to continue`) }]).then();
     }
 
-    static async RunForStdoutAsync(cmd: string): Promise<string>
+    static RunForStdout(cmd: string): string
     {
-        let output = await cp.execSync(cmd).toString();
+        let output = cp.execSync(cmd).toString();
         return output;
     }
 
