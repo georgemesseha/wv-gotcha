@@ -725,14 +725,11 @@ export class WTR_CreateCustomSnippet implements IWalkthrough
         await Dialog.instructAsync("Ctrl + Shift + P -> Convert to a snippet");
         await Dialog.instructAsync("Follow the steps");
         await Dialog.instructAsync("Copy the snippet from the output window.");
-        await Dialog.promptContinueAsync();
         await Dialog.instructAsync("Ctrl + Shift + P -> Configure user snippets");
         await Dialog.instructAsync("Select GSnippets.codesnippets");
-        await Dialog.promptContinueAsync();
         await Dialog.instructAsync("Paste your snippet in GSnippets.codesnippets");
-        await Dialog.promptContinueAsync();
         await Dialog.instructAsync(`Find syntax for editing placeholders here: "https://www.notion.so/vscode-code-snippets-syntax-06411fd9411549c4aadbe118e100f682?pvs=4"`);
-
+        await Dialog.info("GSnippets.codesnippets will be synced automatically by vscode.");
     }
 }
 // #endregion
