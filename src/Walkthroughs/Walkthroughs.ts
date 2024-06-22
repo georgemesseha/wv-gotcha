@@ -736,4 +736,16 @@ export class WTR_CreateCustomSnippet implements IWalkthrough
 }
 // #endregion
 
-
+// #region git >> Untrack file or folder
+@RegisterWalkthrough()
+export class WTR_GitUntrackFileOrFolder implements IWalkthrough
+{
+    text = 'git >> Untrack file or folder'
+    async execAsync()
+    {
+        const path = await Dialog.askForTextAsync("To untrack File or folder RELATIVE path");
+        await Dialog.exec(`git rm -r ${path}`);
+        await Dialog.instructAsync("Add the following path to .gitignore");
+    }
+}
+// #endregion
