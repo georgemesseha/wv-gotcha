@@ -67,6 +67,14 @@ export class Shell
         console.log("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
     }
 
+    static printDangerList(header: string, items: string[])
+    {
+        console.log(ch.red("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"));
+        console.log(ch.bold.bgGray.red(`${header}`) );
+        items.forEach(i => console.log(ch.red(`\t${i}`)));
+        console.log(ch.red("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"));
+    }
+
     static exec(cmd: string, currentDir: string | null = null): void
     {
         console.log

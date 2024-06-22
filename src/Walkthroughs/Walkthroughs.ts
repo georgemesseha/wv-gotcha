@@ -11,6 +11,8 @@ import { PackageJson } from "../Libraries/PackageJson/PackageJson";
 import { DirectoryInfo as wvDirectoryInfo, FileInfo as wvFileInfo, Path as wvPath } from "wv-filesystem";
 import { cwd } from "process";
 import { Git } from "../Libraries/Git/Git";
+import { Mcq } from "../Mcq";
+import { DynamicMcq } from "../DynamicMcq";
 
 const fs = require('fs');
 const os = require('os');
@@ -802,7 +804,7 @@ export class WTR_GitHardResetToOrigin implements IWalkthrough
         Shell.assert(`Are you aware that you're on branch  ${currentBranch} ?`);
         Shell.assert(`Are you sure you want the current branch to be overwritten by the origin?`);
         await Shell.confirmThenExecAsync("git fetch origin", "Will fetch the origin in local ref");
-        await Shell.confirmThenExecAsync(`git reset --hard origin/${currentBranch}`, "Will overwrite the current local branch with the shortly updated local origin ref."); 
+        await Shell.confirmThenExecAsync(`git reset --hard origin/${currentBranch}`, "Will overwrite the current local branch with the shortly updated local origin ref.");
     }
 }
 // #endregion
@@ -814,44 +816,28 @@ export class WTR_GitCreateDeltaBranch implements IWalkthrough
     text = 'git >> Create delta branch in favor of the current one @ Dev, QC, Prod merge'
     async execAsync()
     {
-        const sourceBranch = Git.getCurrentBranch();
-        Shell.warning(`Are you sure the following branch (current) is the SOURCE branch`);
-        Shell.info(sourceBranch);
-        if (! await Shell.yesOrNoAsync("?"))
+        const sourceBranch = Git.getCurrentBranch().toLocaleLowerCase();
+        if (sourceBranch.indexOf("/") >= 0)
         {
-            await Shell.instructAsync("Please checkout the source branch then retry!");
-            Shell.terminate("Execution terminated by the user!");
+            Shell.terminate(`Current branch ${sourceBranch} seems to be a feature branch. Please select a main branch to be the source!`);
         }
 
-        const actualBranches = Git.getBranchNames().map(b => b.toLowerCase());
-        Shell.printList("Branches", actualBranches);
-
-
-        let destBranch: string = '';
-
-        while(true)
-        {
-            destBranch = (await Shell.askForTextAsync("What is the destination branch?")).toLowerCase().trim();
-            
-            if(actualBranches.indexOf(destBranch) < 0)
-            {
-                Shell.error("Invalid branch name!");
-                continue;   
-            }
-            break;
-        }
+        const allBranches = Git.getBranchNames();
+        const destBranchs = allBranches.xExcept([sourceBranch]).xExcept(allBranches.xWhere(b => b.Contains("/")));
+        
+        let destBranch = await new DynamicMcq(destBranchs).selectAsync("Select destination brance");
 
         const deltaBranchName = `delta_${sourceBranch}_${destBranch}_${Shell.getTimeStamp()}`;
 
         await Shell.warning(`The following branches will be overwritten by the origin:`);
-        await Shell.printList("To be overwritten:", [sourceBranch , destBranch]);
+        await Shell.printList("To be overwritten:", [sourceBranch, destBranch]);
         await Shell.assert("ARE YOU SURE?")
-        
+
         await Shell.confirmThenExecAsync("git fetch origin", `Will fetch the origin of the current branch  ${sourceBranch}`);
         await Shell.confirmThenExecAsync(`git reset --hard origin/${sourceBranch}`, `Will reset the local branch ${sourceBranch} to match the origin!`)
-        
 
-        
+
+
         await Shell.confirmThenExecAsync(`git checkout -b ${deltaBranchName}`, `Will create a delta branch ${deltaBranchName} based on the current branch [The source branch]`);
 
         await Shell.confirmThenExecAsync(`git checkout ${destBranch}`, `Will check out the destination branch ${destBranch} for updating it.`);
@@ -864,6 +850,7 @@ export class WTR_GitCreateDeltaBranch implements IWalkthrough
         // git push --set-upstream origin delta_master
         await Shell.confirmThenExecAsync(`git push --set-upstream origin ${deltaBranchName}`, `Will push ${deltaBranchName} for making a pull request of it to ${destBranch}`);
         await Shell.instructAsync(`I'm opening the remote repo in the browser for you to create a pull request of ${deltaBranchName} into ${destBranch}`);
+        await Shell.openInBrowser(await Git.getRemoteOriginAsync());
         Shell.ShowCompletion();
 
         // just making a fake change

@@ -20,7 +20,7 @@ export class Git
     static getBranchNames()
     {
         const result = Shell.RunForStdout("git branch");
-        const names = Regex.of(/\n/g).splitByMatches(result).map(b=>b.value).filter(name => !!name).map(name => name.replace("*", "").trim());
+        const names = Regex.of(/\n/g).splitByMatches(result).map(b=>b.value).filter(name => !!name).map(name => name.replace("*", "").trim().toLowerCase());
 
         return names;
     }
