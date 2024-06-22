@@ -865,6 +865,8 @@ export class WTR_GitCreateDeltaBranch implements IWalkthrough
         await Shell.confirmThenExecAsync(`git push --set-upstream origin ${deltaBranchName}`, `Will push ${deltaBranchName} for making a pull request of it to ${destBranch}`);
         await Shell.instructAsync(`I'm opening the remote repo in the browser for you to create a pull request of ${deltaBranchName} into ${destBranch}`);
         Shell.ShowCompletion();
+
+        // just making a fake change
     }
 }
 // #endregion
