@@ -27,7 +27,7 @@ export class Git
 
     static getCurrentBranch(): string
     {
-        const currentBranch = Shell.RunForStdout("git symbolic-ref --short HEAD");
+        const currentBranch = Shell.RunForStdout("git symbolic-ref --short HEAD").trim();
         return currentBranch;
     }
 }
