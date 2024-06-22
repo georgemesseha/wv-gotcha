@@ -1,18 +1,21 @@
 import { Background, Foreground } from "decova-terminal";
 import { Mcq_Walkthroughs } from "./Mcq_Walkthroughs";
-import { Mcq_YesNo } from "./Mcq_YesNo";
+import { Mcq_AreYouDeadSure, Mcq_YesNo } from "./Mcq_YesNo";
 import ch from "chalk";
 import inquirer from "inquirer";
 import * as cp from "child_process";
 import { UPathMan } from "./UPathMan";
 import * as shell from "shelljs";
+import { stderr } from "process";
 
-export class Dialog
+export class Shell
 {
     static async yesOrNoAsync(question: string): Promise<boolean>
     {
         return await new Mcq_YesNo().selectAsync(question);
     }
+
+    
 
     static async pickWalkghrough()
     {
@@ -65,20 +68,20 @@ export class Dialog
 
     static async confirmThenExecAsync(cmd: string, explanation: string|undefined = undefined)
     {
-        Dialog.hintWillExec(cmd);
+        Shell.hintWillExec(cmd);
         if(explanation)
         {
-            Dialog.info(explanation);
+            Shell.info(explanation);
         }
 
-        const confirmed = await Dialog.yesOrNoAsync("Continue?");
+        const confirmed = await Shell.yesOrNoAsync("Continue?");
         if(confirmed)
         {
-            Dialog.exec(cmd);
+            Shell.exec(cmd);
         }
         else
         {
-            Dialog.error("Execution terminated by user!");
+            Shell.error("Execution terminated by user!");
             throw "Execution terminated by user!";
         }
     }
@@ -110,6 +113,12 @@ export class Dialog
             true);
     }
 
+    static terminate(error: string)
+    {
+        Shell.error(error);
+        process.exit(0);
+    }
+
     static warning(message: string)
     {
         this.log(`! ${message}`, Foreground.magentaBright,
@@ -119,6 +128,15 @@ export class Dialog
             true,
             false,
             true);
+    }
+
+    static async assert(message: string)
+    {
+        console.log(ch.bgRedBright.yellow("You must be dead sure before answering the following:"));
+        const dlg = new Mcq_AreYouDeadSure();
+        const confirmed = await dlg.selectAsync(message);
+
+        if(!confirmed) this.terminate("The execution terminated by the user!");
     }
 
     static info(info: string)
@@ -165,4 +183,33 @@ export class Dialog
     {
         await inquirer.prompt([{ name: "foo", message: ch.bgMagenta.white(`>>> Press "ENTER" to continue`) }]).then();
     }
+
+    static RunForStdout(cmd: string): string
+    {
+        let output = cp.execSync(cmd).toString();
+        return output;
+    }
+
+    static openInBrowser(url: string) {
+        // Define the command based on the operating system
+        let command;
+        switch (process.platform) {
+            case 'darwin': // macOS
+                command = `open ${url}`;
+                break;
+            case 'win32': // Windows
+                command = `start "" "${url}"`;
+                break;
+            case 'linux': // Linux
+                command = `xdg-open ${url}`;
+                break;
+            default:
+                console.error('Unsupported platform:', process.platform);
+                return;
+        }
+    
+        // Execute the command to open the URL
+        cp.execSync(command);
+    }
+    
 }

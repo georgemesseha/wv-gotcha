@@ -1,4 +1,4 @@
-import { Dialog } from "../Dialog";
+import { Shell } from "../Shell";
 import { IWalkthrough } from "./_Foundation/IWalkthrough";
 import { RegisterWalkthrough } from "./_Foundation/_RegisterWalkthrough";
 import { TEMPLATE_PLACEHOLDER, UPathMan, CommonDirName, CommonFileName } from "../UPathMan";
@@ -10,34 +10,35 @@ import { Mcq_CircuitsTasks } from "../Mcq_CircuitsTasks";
 import { PackageJson } from "../Libraries/PackageJson/PackageJson";
 import { DirectoryInfo as wvDirectoryInfo, FileInfo as wvFileInfo, Path as wvPath } from "wv-filesystem";
 import { cwd } from "process";
-    
+import { Git } from "../Libraries/Git/Git";
+
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
 
 
-// #region deno
+// #region Deno-Publish
 @RegisterWalkthrough()
 export class WTR_DenoPublish implements IWalkthrough
 {
-    text = `Deno-Publish`; 
- 
+    text = `Deno-Publish`;
+
     async execAsync()
     {
-        const comment = await Dialog.askForTextAsync(`commit comment:`);
-        Dialog.hintWillExec('Commiting and pushing your changes? press ENTER to continue');
-        await Dialog.promptContinueAsync();
-        Dialog.exec(`git add .`);
-        Dialog.exec(`git commit -m "${comment}"`);
-        Dialog.exec(`git push`);
+        const comment = await Shell.askForTextAsync(`commit comment:`);
+        Shell.hintWillExec('Commiting and pushing your changes? press ENTER to continue');
+        await Shell.promptContinueAsync();
+        Shell.exec(`git add .`);
+        Shell.exec(`git commit -m "${comment}"`);
+        Shell.exec(`git push`);
 
-        Dialog.hintWillExec('Openning releases page:');
-        const dirName = UPathMan.$().currentDir.Name; 
+        Shell.hintWillExec('Openning releases page:');
+        const dirName = UPathMan.$().currentDir.Name;
         const releaseUrl = `https://github.com/wV-software/${dirName}/releases/`;
         // const releaseUrl = `https://github.com/wV-software/wv_core/releases/`;
-        Dialog.exec(`start ${releaseUrl}`);
-        await Dialog.instructAsync(`Find "Draft a new realse" button to start`);
+        Shell.exec(`start ${releaseUrl}`);
+        await Shell.instructAsync(`Find "Draft a new realse" button to start`);
 
     }
 }
@@ -50,8 +51,8 @@ export class WTR_Git_EditGlobalConfiguration implements IWalkthrough
     text = 'Git >> Edit global configuration';
     async execAsync()
     {
-        Dialog.exec(`git config --global core.editor "code --wait"`);
-        Dialog.exec(`git config --global -e`);
+        Shell.exec(`git config --global core.editor "code --wait"`);
+        Shell.exec(`git config --global -e`);
     }
 }
 // #endregion
@@ -63,7 +64,7 @@ export class WTR_Git_ListBranches implements IWalkthrough
     text = 'Git >> List branches';
     async execAsync()
     {
-        Dialog.exec(`git branch`);
+        Shell.exec(`git branch`);
     }
 }
 // #endregion
@@ -80,66 +81,66 @@ export class WTR_GenericGen implements IWalkthrough
         const templatePicker = UTemplatePicker.$();
         const translationMapping = await templatePicker.promptTranslationMappingPicking();
         // #endregion
-        
+
         const templateDirName = translationMapping.templateDirName;
         let count = 0;
 
         async function translateFileAsync(srcFileRelPath: string): Promise<boolean>
         {
-            for(const pattern of translationMapping.fileRelPathPatternsToIgnore ?? [])
+            for (const pattern of translationMapping.fileRelPathPatternsToIgnore ?? [])
             {
                 try
                 {
-                    if(Regex.parse(pattern).hasMatches(srcFileRelPath))
+                    if (Regex.parse(pattern).hasMatches(srcFileRelPath))
                     {
-                        Dialog.warning(`File '${srcFileRelPath}' skipped by 'fileRelPathPatternsToIgnore = '${pattern}'`);
+                        Shell.warning(`File '${srcFileRelPath}' skipped by 'fileRelPathPatternsToIgnore = '${pattern}'`);
                         return false;
                     }
                 }
-                catch(exp)
+                catch (exp)
                 {
-                    Dialog.error(`fileRelPathPatternsToIgnore = '${pattern}' is not a valid Regex pattern.`);
+                    Shell.error(`fileRelPathPatternsToIgnore = '${pattern}' is not a valid Regex pattern.`);
                     return false;
                 }
             }
-            
+
             const isTranslated = await UTemplateTranslator.$().translateGenericTemplateFileAsync(templateDirName, srcFileRelPath, []);
             return isTranslated;
         }
-        
-        for(let translationItem of translationMapping.translationItems)
+
+        for (let translationItem of translationMapping.translationItems)
         {
-            switch(translationItem.itemType)
+            switch (translationItem.itemType)
             {
                 case "file":
                     const srcFileRelPath = translationItem.relativePath;
                     const isTranslated = await translateFileAsync(srcFileRelPath);
-                    if(isTranslated) count ++;
+                    if (isTranslated) count++;
                     break;
                 case "folder":
                     const folder = new DirectoryInfo(Path.join(UPathMan.$().contentDir.FullName));
-                    if(folder.Exists() === false) 
+                    if (folder.Exists() === false) 
                     {
-                        Dialog.error(`Folder '${translationItem.relativePath}' doesn't exist!`)
+                        Shell.error(`Folder '${translationItem.relativePath}' doesn't exist!`)
                         continue;
                     }
                     break;
             }
         }
 
-        if(count < 1)
+        if (count < 1)
         {
-            Dialog.error('No files translated!');
+            Shell.error('No files translated!');
         }
         else
         {
-            if(count > 1)
+            if (count > 1)
             {
-                Dialog.success(`{${count}} Files have been created.`);
+                Shell.success(`{${count}} Files have been created.`);
             }
             else
             {
-                Dialog.success(`1 File has been created.`);
+                Shell.success(`1 File has been created.`);
             }
         }
 
@@ -165,9 +166,9 @@ export class WTR_Dev_Generatate_AnyDotNetProject_GitIgnore implements IWalkthrou
     {
         const pathMan = UPathMan.$();
 
-        if(new FileInfo(pathMan.dstnGitIgnoreFilePath).exists())
+        if (new FileInfo(pathMan.dstnGitIgnoreFilePath).exists())
         {
-            Dialog.warning(`${CommonFileName.gitIgnore} already exists`);
+            Shell.warning(`${CommonFileName.gitIgnore} already exists`);
             return;
         }
 
@@ -178,13 +179,13 @@ export class WTR_Dev_Generatate_AnyDotNetProject_GitIgnore implements IWalkthrou
 
         const count = UTemplateTranslator.$().translate(CommonDirName.Template_RootDir_AnyDotNetProject, fileSelector);
 
-        if(count < 1)
+        if (count < 1)
         {
-            Dialog.error('No files translated!');
+            Shell.error('No files translated!');
         }
         else
         {
-            Dialog.success(`{${count}} File ${CommonFileName.gitIgnore} has been created.`);
+            Shell.success(`{${count}} File ${CommonFileName.gitIgnore} has been created.`);
         }
     }
 }
@@ -194,11 +195,11 @@ export class WTR_Dev_Generatate_AnyDotNetProject_GitIgnore implements IWalkthrou
 @RegisterWalkthrough()
 export class WTR_CircuitsTasks implements IWalkthrough
 {
-    text = `Circuits`; 
- 
+    text = `Circuits`;
+
     async execAsync()
     {
-        while(true)
+        while (true)
         {
             const task = await new Mcq_CircuitsTasks().selectAsync('Pick a task');
             await task.execAsync();
@@ -218,34 +219,34 @@ export class WTR_Dev_AnyNodeJSProject_CollectPackagesCodeSnippets implements IWa
         const pathMan = UPathMan.$();
 
         const nodeModulesDir = pathMan.currentDir.GetDirectories().xFirstOrNull(d => d.Name === 'node_modules');
-        if(!nodeModulesDir)
+        if (!nodeModulesDir)
         {
-            Dialog.error(`node_modules file not found @${pathMan.currentDir}`);
+            Shell.error(`node_modules file not found @${pathMan.currentDir}`);
             return;
         }
 
         let count = 0;
-        for(let dir of nodeModulesDir.GetDirectories())
+        for (let dir of nodeModulesDir.GetDirectories())
         {
             const snippetsFile = new FileInfo(Path.join(dir.FullName, 'package.code-snippets'));
-            if(snippetsFile.exists())
+            if (snippetsFile.exists())
             {
                 const dstPath = Path.join(pathMan.dstVscodeDir.FullName, `${dir.Name}.code-snippets`)
-                Dialog.info(`Creating ${dstPath}`);
+                Shell.info(`Creating ${dstPath}`);
 
                 snippetsFile.copyTo(dstPath);
 
-                count ++;
+                count++;
             }
         }
 
-        if(count < 1)
+        if (count < 1)
         {
-            Dialog.error('No files translated!');
+            Shell.error('No files translated!');
         }
         else
         {
-            Dialog.success(`{${count}} .code-snippets file(s) have been created.`);
+            Shell.success(`{${count}} .code-snippets file(s) have been created.`);
         }
     }
 }
@@ -259,7 +260,7 @@ export class WTR_Dev_AnyNodeProject_ListDirectDependencies implements IWalkthrou
 
     async execAsync()
     {
-        await Dialog.exec('npm list --depth=0');
+        await Shell.exec('npm list --depth=0');
     }
 }
 // #endregion
@@ -268,12 +269,12 @@ export class WTR_Dev_AnyNodeProject_ListDirectDependencies implements IWalkthrou
 @RegisterWalkthrough()
 export class WTR_Dev_DevelopWvGotcha implements IWalkthrough
 {
-    text = `Dev >> Develop wV Gotcha`; 
+    text = `Dev >> Develop wV Gotcha`;
     async execAsync()
     {
         const path = `G:/_MyProjects/_MyNodeProjects/wv-gotcha`
-        Dialog.info(`Pleae wait for vscode to open`);
-        Dialog.exec(`code \"${path}\"`);
+        Shell.info(`Pleae wait for vscode to open`);
+        Shell.exec(`code \"${path}\"`);
     }
 }
 // #endregion
@@ -288,9 +289,9 @@ export class WTR_Dev_Generatate_AnyNodeJSProject_GitIgnore implements IWalkthrou
     {
         const pathMan = UPathMan.$();
 
-        if(new FileInfo(pathMan.dstnGitIgnoreFilePath).exists())
+        if (new FileInfo(pathMan.dstnGitIgnoreFilePath).exists())
         {
-            Dialog.warning(`${CommonFileName.gitIgnore} already exists`);
+            Shell.warning(`${CommonFileName.gitIgnore} already exists`);
             return;
         }
 
@@ -301,13 +302,13 @@ export class WTR_Dev_Generatate_AnyNodeJSProject_GitIgnore implements IWalkthrou
 
         const count = UTemplateTranslator.$().translate(CommonDirName.Template_RootDir_AnyNodeProject, fileSelector);
 
-        if(count < 1)
+        if (count < 1)
         {
-            Dialog.error('No files translated!');
+            Shell.error('No files translated!');
         }
         else
         {
-            Dialog.success(`{${count}} File ${CommonFileName.gitIgnore} has been created.`);
+            Shell.success(`{${count}} File ${CommonFileName.gitIgnore} has been created.`);
         }
     }
 }
@@ -323,9 +324,9 @@ export class WTR_Dev_Generatate_AnyNodeJSProject_tsConfigJson implements IWalkth
     {
         const pathMan = UPathMan.$();
 
-        if(new FileInfo(pathMan.dstnTsConfigFilePath).exists())
+        if (new FileInfo(pathMan.dstnTsConfigFilePath).exists())
         {
-            Dialog.warning(`${CommonFileName.tsConfigJson} already exists`);
+            Shell.warning(`${CommonFileName.tsConfigJson} already exists`);
             return;
         }
 
@@ -336,13 +337,13 @@ export class WTR_Dev_Generatate_AnyNodeJSProject_tsConfigJson implements IWalkth
 
         const count = UTemplateTranslator.$().translate(CommonDirName.Template_RootDir_AnyNodeProject, fileSelector);
 
-        if(count < 1)
+        if (count < 1)
         {
-            Dialog.error('No files translated!');
+            Shell.error('No files translated!');
         }
         else
         {
-            Dialog.success(`{${count}} File ${CommonFileName.tsConfigJson} has been created.`);
+            Shell.success(`{${count}} File ${CommonFileName.tsConfigJson} has been created.`);
         }
     }
 }
@@ -358,20 +359,20 @@ export class WTR_Dev_NewDotNetSolution_GenCleanCodeService implements IWalkthrou
     {
         const pathMan = UPathMan.$();
 
-        if(pathMan.currentDir.GetDirectories().xAny() || pathMan.currentDir.GetFiles().xAny())
+        if (pathMan.currentDir.GetDirectories().xAny() || pathMan.currentDir.GetFiles().xAny())
         {
-            Dialog.error(`Current directory is not empty!`);
+            Shell.error(`Current directory is not empty!`);
             return;
         }
 
-        const __TestFile_ = await Dialog.askForTextAsync('__TestFile_?');
+        const __TestFile_ = await Shell.askForTextAsync('__TestFile_?');
 
         const srcDir = Path.join(CommonDirName.Template_RootDir_NewCleanArchitectureSolution);
-        const count = UTemplateTranslator.$().translate(srcDir, ()=>true, new Map([['__TestFile_', __TestFile_]]));
+        const count = UTemplateTranslator.$().translate(srcDir, () => true, new Map([['__TestFile_', __TestFile_]]));
 
         // Dialog.exec('npm install');
 
-        Dialog.success(`{${count}} files has been created.`);
+        Shell.success(`{${count}} files has been created.`);
     }
 }
 // #endregion
@@ -386,20 +387,20 @@ export class WTR_Dev_Generatate_NewNodeJSProject_GlobalTool implements IWalkthro
     {
         const pathMan = UPathMan.$();
 
-        if(pathMan.currentDir.GetDirectories().xAny() || pathMan.currentDir.GetFiles().xAny())
+        if (pathMan.currentDir.GetDirectories().xAny() || pathMan.currentDir.GetFiles().xAny())
         {
-            Dialog.error(`Current directory is not empty!`);
+            Shell.error(`Current directory is not empty!`);
             return;
         }
 
-        const ___PACKAGE_NAME = await Dialog.askForTextAsync('Package name?');
+        const ___PACKAGE_NAME = await Shell.askForTextAsync('Package name?');
 
         const srcDir = Path.join(CommonDirName.Template_RootDir_NewNodeProject, 'GlobalTool');
-        const count = UTemplateTranslator.$().translate(srcDir, ()=>true, new Map([['___PACKAGE_NAME', ___PACKAGE_NAME]]));
+        const count = UTemplateTranslator.$().translate(srcDir, () => true, new Map([['___PACKAGE_NAME', ___PACKAGE_NAME]]));
 
-        Dialog.exec('npm install');
+        Shell.exec('npm install');
 
-        Dialog.success(`{${count}} files has been created.`);
+        Shell.success(`{${count}} files has been created.`);
     }
 }
 // #endregion
@@ -408,12 +409,12 @@ export class WTR_Dev_Generatate_NewNodeJSProject_GlobalTool implements IWalkthro
 @RegisterWalkthrough()
 export class WTR_Dev_ViewCurrentlyFocusedProjects implements IWalkthrough
 {
-    text = `Dev >> View currently focused projects`; 
+    text = `Dev >> View currently focused projects`;
     async execAsync()
     {
         const path = `G:\\_MyProjects\\__CurrentProjects`
-        Dialog.info(`Pleae wait for {${path}} to open`);
-        Dialog.exec(`explorer \"${path}\"`);
+        Shell.info(`Pleae wait for {${path}} to open`);
+        Shell.exec(`explorer \"${path}\"`);
     }
 }
 // #endregion
@@ -441,7 +442,7 @@ export class WTR_Dev_vscode_empower_Settings implements IWalkthrough
 
         const count = UTemplateTranslator.$().translate(CommonDirName.Template_RootDir_AnyNodeProject, fileSelector, new Map(), true);
 
-        Dialog.success(`{${count}} File ${CommonFileName.wvSnippets} has been created.`);
+        Shell.success(`{${count}} File ${CommonFileName.wvSnippets} has been created.`);
     }
 }
 // #endregion
@@ -456,9 +457,9 @@ export class WTR_Dev_vscode_empower_WvCodeSnippets implements IWalkthrough
     {
         const pathMan = UPathMan.$();
 
-        if(new FileInfo(pathMan.dstnWvSnippetsFilePath).exists())
+        if (new FileInfo(pathMan.dstnWvSnippetsFilePath).exists())
         {
-            Dialog.warning(`${CommonFileName.wvSnippets} already exists`);
+            Shell.warning(`${CommonFileName.wvSnippets} already exists`);
             return;
         }
 
@@ -469,7 +470,7 @@ export class WTR_Dev_vscode_empower_WvCodeSnippets implements IWalkthrough
 
         const count = UTemplateTranslator.$().translate(CommonDirName.Template_RootDir_AnyNodeProject, fileSelector);
 
-        Dialog.success(`{${count}} File ${CommonFileName.wvSnippets} has been created.`);
+        Shell.success(`{${count}} File ${CommonFileName.wvSnippets} has been created.`);
     }
 }
 // #endregion
@@ -486,30 +487,30 @@ export class WTR_Fun_GrapWallpapers implements IWalkthrough
         const userHomeDir = wvDirectoryInfo.special.userProfile;
         const tempDir = new wvDirectoryInfo(tempDirPath);
         tempDir.ensure();
-        
-        Dialog.exec(`explorer \"${tempDir.fullName.xReplaceAll('/', '\\')}\"`);
+
+        Shell.exec(`explorer \"${tempDir.fullName.xReplaceAll('/', '\\')}\"`);
 
         const spotListDirPath = Path.join(userHomeDir.fullName, `AppData/Local/Packages/Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy/LocalState/Assets`);
         const bingImagePath = Path.join(userHomeDir.fullName, `/AppData/Roaming/Microsoft/Windows/Themes/TranscodedWallpaper`);
-        
-        const spotLightFiles = new wvDirectoryInfo(spotListDirPath).getFiles().xWhere(f=>f.fileSize > 100000);
-        for(let f of spotLightFiles)
+
+        const spotLightFiles = new wvDirectoryInfo(spotListDirPath).getFiles().xWhere(f => f.fileSize > 100000);
+        for (let f of spotLightFiles)
         {
             f.copyTo(`${tempDir.fullName}/${f.name}.jpeg`);
         }
-        
+
         const bingImageFile = new FileInfo(bingImagePath);
 
-        if(bingImageFile.exists() === false)
+        if (bingImageFile.exists() === false)
         {
-            Dialog.warning(`Bing image file doesn\'t exist @${bingImagePath}`);
+            Shell.warning(`Bing image file doesn\'t exist @${bingImagePath}`);
         }
         else
         {
             bingImageFile.copyTo(`${tempDir.fullName}/${bingImageFile.name}.jpg`);
         }
-        
-        await Dialog.instructAsync('Please wait the grapped in folder to open in the explorer');
+
+        await Shell.instructAsync('Please wait the grapped in folder to open in the explorer');
     }
 }
 // #endregion
@@ -518,36 +519,36 @@ export class WTR_Fun_GrapWallpapers implements IWalkthrough
 @RegisterWalkthrough()
 export class WTR_Notes_NewMinMap implements IWalkthrough
 {
-    text = `Notes >> New mindmap (.xmmap)`; 
- 
+    text = `Notes >> New mindmap (.xmmap)`;
+
     async execAsync()
     {
         const pathMan = UPathMan.$();
 
         let docName!: string;
-        while(true)
+        while (true)
         {
-            docName = await Dialog.askForTextAsync('Document Name?');
+            docName = await Shell.askForTextAsync('Document Name?');
             const isValid = /^[0-9A-z \-\._\(\)]+$/.test(docName);
             if (!isValid)
             {
-                Dialog.error("File name is expected to contains alphabets, numerics and {-,.,_,(,)} only");
+                Shell.error("File name is expected to contains alphabets, numerics and {-,.,_,(,)} only");
                 continue;
             }
 
             break;
         }
-        
+
         var newFile = pathMan.getMindMapFile(docName);
-        if(newFile.exists() === false)
+        if (newFile.exists() === false)
         {
             const templateFile = new FileInfo(pathMan.xmmapTemplateFile.fullName);
             const content = templateFile.readAllText().xReplaceAll(TEMPLATE_PLACEHOLDER, docName);
             pathMan.getMindMapFile(docName).writeAllText(content);
         }
 
-        Dialog.info(`Pleae wait for ${docName}.xmmap to open`);
-        Dialog.exec(`\"${newFile.fullName}\"`);
+        Shell.info(`Pleae wait for ${docName}.xmmap to open`);
+        Shell.exec(`\"${newFile.fullName}\"`);
     }
 }
 // #endregion
@@ -561,21 +562,21 @@ export class WTR_Ops_AnyNodeJSProject_IncrementPatch implements IWalkthrough
     async execAsync()
     {
         const pathMan = UPathMan.$();
-        
+
         const currentDir = pathMan.currentDir.FullName;
         const pkgFile = new FileInfo(Path.join(currentDir, 'package.json'));
 
-        if(pkgFile.exists() == false)
+        if (pkgFile.exists() == false)
         {
-            Dialog.error(`No package.json found @${currentDir}`)
+            Shell.error(`No package.json found @${currentDir}`)
             return;
         }
 
-        Dialog.info(`File updated: ${pkgFile.fullName}`);
+        Shell.info(`File updated: ${pkgFile.fullName}`);
         const pkg = new PackageJson(pkgFile.fullName);
 
         pkg.incrementVersionPatch(true);
-        Dialog.success(`Package version updated to ${pkg.version}`);
+        Shell.success(`Package version updated to ${pkg.version}`);
     }
 
 }
@@ -591,9 +592,9 @@ export class WTR_Ops_AnyNodePackageJSProject_Publish implements IWalkthrough
     {
         const pathMan = UPathMan.$();
 
-        await Dialog.exec('tsc');
+        await Shell.exec('tsc');
         await new WTR_Ops_AnyNodeJSProject_IncrementPatch().execAsync();
-        await Dialog.exec('npm publish');
+        await Shell.exec('npm publish');
     }
 }
 // #endregion
@@ -606,7 +607,7 @@ export class WTR_Ops_Docker_Container_ListRunning implements IWalkthrough
 
     async execAsync()
     {
-        await Dialog.exec('docker ps');
+        await Shell.exec('docker ps');
     }
 }
 // #endregion
@@ -619,10 +620,10 @@ export class WTR_Ops_Docker_Image_ExportToTar implements IWalkthrough
 
     async execAsync()
     {
-        await Dialog.exec('docker image ls');
-        const imageId = await Dialog.instructAsync('Pick an image Id from the above list');
-        const outputFilePath = await Dialog.instructAsync('Output .tar file path?');
-        await Dialog.exec(`docker image save ${imageId} ${outputFilePath}`);
+        await Shell.exec('docker image ls');
+        const imageId = await Shell.instructAsync('Pick an image Id from the above list');
+        const outputFilePath = await Shell.instructAsync('Output .tar file path?');
+        await Shell.exec(`docker image save ${imageId} ${outputFilePath}`);
     }
 }
 // #endregion
@@ -635,12 +636,12 @@ export class WTR_Ops_FindProcessWhosePort implements IWalkthrough
 
     async execAsync()
     {
-        const port = await Dialog.askForTextAsync('Port?')
-        Dialog.exec(`netstat -ano | findstr :${port}`);
+        const port = await Shell.askForTextAsync('Port?')
+        Shell.exec(`netstat -ano | findstr :${port}`);
 
-        Dialog.instructAsync(`Pick a PID from the above list`);
-        const pid = await Dialog.askForTextAsync('PID?');
-        Dialog.exec(`tasklist /svc /FI \"PID eq ${pid}\"`);
+        Shell.instructAsync(`Pick a PID from the above list`);
+        const pid = await Shell.askForTextAsync('PID?');
+        Shell.exec(`tasklist /svc /FI \"PID eq ${pid}\"`);
     }
 }
 // #endregion
@@ -649,10 +650,10 @@ export class WTR_Ops_FindProcessWhosePort implements IWalkthrough
 @RegisterWalkthrough()
 export class WTR_Ops_ListGlobalyInstalledPackages implements IWalkthrough
 {
-    text = `Ops >> NodeJS >> List globally installed packages`; 
+    text = `Ops >> NodeJS >> List globally installed packages`;
     async execAsync()
     {
-        await Dialog.exec('npm list --global --depth=0');
+        await Shell.exec('npm list --global --depth=0');
     }
 }
 // #endregion
@@ -667,9 +668,9 @@ export class WTR_Ops_PackVsCodeExtension implements IWalkthrough
     {
         const pathMan = UPathMan.$();
 
-        await Dialog.exec('tsc');
+        await Shell.exec('tsc');
         await new WTR_Ops_AnyNodeJSProject_IncrementPatch().execAsync();
-        await Dialog.exec('vsce package');
+        await Shell.exec('vsce package');
     }
 }
 // #endregion
@@ -681,8 +682,8 @@ export class WTR_AmmendAllWorktreeChanges implements IWalkthrough
     text = 'Git >> Ammend all work tree changes';
     async execAsync()
     {
-        Dialog.exec("git add .");
-        Dialog.exec("git commit --amend");
+        Shell.exec("git add .");
+        Shell.exec("git commit --amend");
     }
 }
 // #endregion
@@ -694,7 +695,7 @@ export class WTR_AmmendAll implements IWalkthrough
     text = 'Git >> List remote repos';
     async execAsync()
     {
-        Dialog.exec("git remote -v");
+        Shell.exec("git remote -v");
     }
 }
 // #endregion
@@ -706,8 +707,8 @@ export class WTR_UpdateRemoteOrigin implements IWalkthrough
     text = 'Git >> Change remote origin';
     async execAsync()
     {
-        const url = await Dialog.askForTextAsync("The new origin URL?")
-        Dialog.exec(`git remote set-url origin ${url}`);
+        const url = await Shell.askForTextAsync("The new origin URL?")
+        Shell.exec(`git remote set-url origin ${url}`);
     }
 }
 // #endregion
@@ -719,17 +720,17 @@ export class WTR_CreateCustomSnippet implements IWalkthrough
     text = 'vscode >> Create custom snippet from existing code';
     async execAsync()
     {
-        await Dialog.warning("Recall: Your naming convetion of the prefix is * followed by a descriptive name");
-        await Dialog.warning("Give a Title but don't worry about the Description");
-        await Dialog.instructAsync("Select the code you want to create a snippet from.");
-        await Dialog.instructAsync("Ctrl + Shift + P -> Convert to a snippet");
-        await Dialog.instructAsync("Follow the steps");
-        await Dialog.instructAsync("Copy the snippet from the output window.");
-        await Dialog.instructAsync("Ctrl + Shift + P -> Configure user snippets");
-        await Dialog.instructAsync("Select GSnippets.codesnippets");
-        await Dialog.instructAsync("Paste your snippet in GSnippets.codesnippets");
-        await Dialog.instructAsync(`Find syntax for editing placeholders here: "https://www.notion.so/vscode-code-snippets-syntax-06411fd9411549c4aadbe118e100f682?pvs=4"`);
-        await Dialog.info("GSnippets.codesnippets will be synced automatically by vscode.");
+        await Shell.warning("Recall: Your naming convetion of the prefix is * followed by a descriptive name");
+        await Shell.warning("Give a Title but don't worry about the Description");
+        await Shell.instructAsync("Select the code you want to create a snippet from.");
+        await Shell.instructAsync("Ctrl + Shift + P -> Convert to a snippet");
+        await Shell.instructAsync("Follow the steps");
+        await Shell.instructAsync("Copy the snippet from the output window.");
+        await Shell.instructAsync("Ctrl + Shift + P -> Configure user snippets");
+        await Shell.instructAsync("Select GSnippets.codesnippets");
+        await Shell.instructAsync("Paste your snippet in GSnippets.codesnippets");
+        await Shell.instructAsync(`Find syntax for editing placeholders here: "https://www.notion.so/vscode-code-snippets-syntax-06411fd9411549c4aadbe118e100f682?pvs=4"`);
+        await Shell.info("GSnippets.codesnippets will be synced automatically by vscode.");
     }
 }
 // #endregion
@@ -741,25 +742,94 @@ export class WTR_GitUntrackFileOrFolder implements IWalkthrough
     text = 'git >> Untrack file or folder'
     async execAsync()
     {
-        let path = (await Dialog.askForTextAsync("To untrack File or folder RELATIVE path")).trim();
-        if(new DirectoryInfo(Path.join(cwd(), path)).Exists())
+        let path = (await Shell.askForTextAsync("To untrack File or folder RELATIVE path")).trim();
+        if (new DirectoryInfo(Path.join(cwd(), path)).Exists())
         {
-            if(!path.endsWith("/"))
+            if (!path.endsWith("/"))
             {
-                Dialog.warning(`${path} is a directory. I added a trailing '/' for you. But get accustomed to add a trailing '/' to denote a directory in your future git commands.`)   
+                Shell.warning(`${path} is a directory. I added a trailing '/' for you. But get accustomed to add a trailing '/' to denote a directory in your future git commands.`)
                 path = `${path}/`;
             }
         }
-        else if(!new FileInfo(Path.join(cwd(), path)).exists())
+        else if (!new FileInfo(Path.join(cwd(), path)).exists())
         {
-            Dialog.error(`Path [${path}] doesn't exist!`);
+            Shell.error(`Path [${path}] doesn't exist!`);
             process.exit(0);
         }
+
+        await Shell.confirmThenExecAsync(`git rm --cached -r ${path}`, `This will make a "git change" of untracking the file/folder. To be commited by a next command.`);
+        await Shell.confirmThenExecAsync(`git status`, `This will run "git status" to make sure of untracking as a change.`)
+        await Shell.instructAsync(`Add this path  ${path}  as a line to .gitignore.`);
+        await Shell.ShowCompletion();
+    }
+}
+//#endregion 
+
+// #region git >> Open remote repo in default browser
+@RegisterWalkthrough()
+export class WTR_GitOpenRemoteRepoInDefaultBrowser implements IWalkthrough
+{
+    text = 'git >> Open remote repo in default browser'
+    async execAsync()
+    {
+        const remoteOrigin = await Git.getRemoteOriginAsync();
+        Shell.openInBrowser(remoteOrigin);
+        await Shell.instructAsync(remoteOrigin);
+    }
+}
+// #endregion
+
+// #region git >> amend to previous commit
+@RegisterWalkthrough()
+export class WTR_GitAmendToPreviousCommit implements IWalkthrough
+{
+    text = 'git >> amend to previous commit'
+    async execAsync()
+    {
+        await Shell.confirmThenExecAsync("git commit --amend");
+    }
+}
+// #endregion
+
+// #region git >> Create delta branch in favor of the current one
+@RegisterWalkthrough()
+export class WTR_GitCreateDeltaBranch implements IWalkthrough
+{
+    text = 'git >> Create delta branch in favor of the current one @ Dev, QC, Prod merge'
+    async execAsync()
+    {
+        const currentBranch = Git.getCurrentBranch();
+        Shell.warning(`Are you sure the following branch (current) is the SOURCE branch`);
+        Shell.info(currentBranch);
+        if (! await Shell.yesOrNoAsync("?"))
+        {
+            await Shell.instructAsync("Please checkout the source branch then retry!");
+            Shell.terminate("Execution terminated by the user!");
+        }
+
+        const actualBranches = Git.getBranchNames().map(b => b.toLowerCase());
+        Shell.log("Branches:");
+        actualBranches.forEach(b => Shell.info(b));
+
+        let destBranch: string = '';
+
+        while(true)
+        {
+            destBranch = (await Shell.askForTextAsync("What is the destination branch?")).toLowerCase();
+            
+            if(actualBranches.indexOf(destBranch) < 0)
+            {
+                Shell.error("Invalid branch name!");
+                continue;   
+            }
+            break;
+        }
+
+        await Shell.assert(`The following branches will be overwritten by the origin:   ${currentBranch} , ${destBranch}`);
         
-        await Dialog.confirmThenExecAsync(`git rm --cached -r ${path}`, `This will make a "git change" of untracking the file/folder. To be commited by a next command.`);
-        await Dialog.confirmThenExecAsync(`git status`, `This will run "git status" to make sure of untracking as a change.`)
-        await Dialog.instructAsync(`Add this path  ${path}  as a line to .gitignore.`);
-        await Dialog.ShowCompletion();
+
+        Shell.confirmThenExecAsync(`git fetch --all`, `This will fetch all the updates of all branches to the local ref`);
+        Shell.confirmThenExecAsync(`git reset --hard origin/${currentBranch}`, `This will reset the local branch ${currentBranch} to match the origin!`)
     }
 }
 // #endregion

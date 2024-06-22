@@ -1,7 +1,7 @@
 import { IWalkthrough } from "./Walkthroughs/_Foundation/IWalkthrough";
 import { Mcq } from "./Mcq";
 import { TranslationMapping, TranslationMap } from "./Libraries/TemplateTranslation/TranslationMap";
-import { Dialog } from "./Dialog";
+import { Shell } from "./Shell";
 
 
 export class Mcq_PickGenTemplate extends Mcq<TranslationMapping>

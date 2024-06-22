@@ -2,7 +2,7 @@ import { DirectoryInfo, FileInfo } from "decova-filesystem";
 import path from "path";
 import { Regex, RootCircuit } from "temp-circuits";
 import { Register } from "temp-circuits/dist/Decorators/_Register";
-import { Dialog } from "../../Dialog";
+import { Shell } from "../../Shell";
 import { UPathMan } from "../../UPathMan";
 import { UTextTranslator } from "./UTextTranslator";
 import { cwd } from "process";
@@ -30,11 +30,11 @@ export class UTemplateTranslator extends RootCircuit
 
         if(!overwrite && new FileInfo(dstAbsFilePath).exists())
         {
-            Dialog.warning(`Already existing file skipped: ${dstAbsFilePath}`);  
+            Shell.warning(`Already existing file skipped: ${dstAbsFilePath}`);  
             return false;
         } 
 
-        Dialog.info(`Creating file: ${dstAbsFilePath}`)
+        Shell.info(`Creating file: ${dstAbsFilePath}`)
         const contentToTranslate = new FileInfo(srcAbsFilePath).readAllText();
         await this._ensurePlaceholderValuesAsync(contentToTranslate, translationDictionary);
 
@@ -54,7 +54,7 @@ export class UTemplateTranslator extends RootCircuit
             const existing = translationDictionary.xFirstOrDefault(i => i.from === placeholderMatch.value);
             if(!existing)
             {
-                const value = await Dialog.askForTextAsync(placeholderMatch.value);
+                const value = await Shell.askForTextAsync(placeholderMatch.value);
                 translationDictionary.xAdd({from: placeholderMatch.value, to: value});
             }
         }
@@ -88,11 +88,11 @@ export class UTemplateTranslator extends RootCircuit
             
             if(!overwrite && new FileInfo(fDstAbsPath).exists())
             {
-                Dialog.warning(`File skipped (It already exists): ${fDstAbsPath}`);  
+                Shell.warning(`File skipped (It already exists): ${fDstAbsPath}`);  
                 continue;
             } 
 
-            Dialog.info(`Creating file: ${fDstAbsPath}`)
+            Shell.info(`Creating file: ${fDstAbsPath}`)
             const contentToTranslate = new FileInfo(fPath).readAllText();
             const translatedContent = UTextTranslator.$().translate(contentToTranslate, translationMap);
             const newFile = new FileInfo(fDstAbsPath);
