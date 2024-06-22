@@ -6,8 +6,9 @@ import inquirer from "inquirer";
 import * as cp from "child_process";
 import { UPathMan } from "./UPathMan";
 import * as shell from "shelljs";
+import { stderr } from "process";
 
-export class Dialog
+export class Shell
 {
     static async yesOrNoAsync(question: string): Promise<boolean>
     {
@@ -65,20 +66,20 @@ export class Dialog
 
     static async confirmThenExecAsync(cmd: string, explanation: string|undefined = undefined)
     {
-        Dialog.hintWillExec(cmd);
+        Shell.hintWillExec(cmd);
         if(explanation)
         {
-            Dialog.info(explanation);
+            Shell.info(explanation);
         }
 
-        const confirmed = await Dialog.yesOrNoAsync("Continue?");
+        const confirmed = await Shell.yesOrNoAsync("Continue?");
         if(confirmed)
         {
-            Dialog.exec(cmd);
+            Shell.exec(cmd);
         }
         else
         {
-            Dialog.error("Execution terminated by user!");
+            Shell.error("Execution terminated by user!");
             throw "Execution terminated by user!";
         }
     }
@@ -165,4 +166,33 @@ export class Dialog
     {
         await inquirer.prompt([{ name: "foo", message: ch.bgMagenta.white(`>>> Press "ENTER" to continue`) }]).then();
     }
+
+    static async RunForStdoutAsync(cmd: string): Promise<string>
+    {
+        let output = await cp.execSync(cmd).toString();
+        return output;
+    }
+
+    static openInBrowser(url: string) {
+        // Define the command based on the operating system
+        let command;
+        switch (process.platform) {
+            case 'darwin': // macOS
+                command = `open ${url}`;
+                break;
+            case 'win32': // Windows
+                command = `start "" "${url}"`;
+                break;
+            case 'linux': // Linux
+                command = `xdg-open ${url}`;
+                break;
+            default:
+                console.error('Unsupported platform:', process.platform);
+                return;
+        }
+    
+        // Execute the command to open the URL
+        cp.execSync(command);
+    }
+    
 }

@@ -1,4 +1,4 @@
-import { Dialog } from "./Dialog";
+import { Shell } from "./Shell";
 import { Mcq } from "./Mcq";
 import { IWalkthrough } from "./Walkthroughs/_Foundation/IWalkthrough";
 
@@ -57,8 +57,8 @@ class WTR_Code_Circuits implements IWalkthrough
     async execAsync()
     {
         const path = `G:/_MyProjects/_MyNodeProjects/_FinalCircuits/dotwire`
-        Dialog.info(`Please wait for vscode to open`);
-        Dialog.exec(`code \"${path}\"`);
+        Shell.info(`Please wait for vscode to open`);
+        Shell.exec(`code \"${path}\"`);
     }
 }
 
@@ -68,8 +68,8 @@ class WTR_Code_ExtensionResources implements IWalkthrough
     async execAsync()
     {
         const path = `G:/_MyProjects/_MyNodeProjects/_FinalCircuits/circuit-bench-site/vscode-extension-resources`
-        Dialog.info(`Please wait for vscode to open`);
-        Dialog.exec(`code \"${path}\"`);
+        Shell.info(`Please wait for vscode to open`);
+        Shell.exec(`code \"${path}\"`);
     }
 }
 
@@ -79,8 +79,8 @@ class WTR_Code_AngularSample implements IWalkthrough
     async execAsync()
     {
         const path = `G:/_MyProjects/_MyNodeProjects/_FinalCircuits/circuits-sample-angular`;
-        Dialog.info(`Please wait for vscode to open`);
-        Dialog.exec(`code \"${path}\"`);
+        Shell.info(`Please wait for vscode to open`);
+        Shell.exec(`code \"${path}\"`);
         // Dialog.exec(`npm run update-dep`, path);
     }
 }
@@ -92,8 +92,8 @@ class WTR_Code_ReactSample implements IWalkthrough
     async execAsync()
     {
         const path = `G:/_MyProjects/_MyNodeProjects/_FinalCircuits/circuits-sample-react`;
-        Dialog.info(`Please wait for vscode to open`);
-        Dialog.exec(`code \"${path}\"`);
+        Shell.info(`Please wait for vscode to open`);
+        Shell.exec(`code \"${path}\"`);
         // Dialog.exec(`npm run update-dep`, path);
     }
 }
@@ -104,8 +104,8 @@ class WTR_Code_View implements IWalkthrough
     async execAsync()
     {
         const path = `G:/_MyProjects/_MyNodeProjects/_FinalCircuits/extension-view`;
-        Dialog.info(`Please wait for vscode to open`);
-        Dialog.exec(`code \"${path}\"`);
+        Shell.info(`Please wait for vscode to open`);
+        Shell.exec(`code \"${path}\"`);
         // Dialog.exec(`npm run update-dep`, path);
     }
 }
@@ -116,8 +116,8 @@ class WTR_Code_Gotcha implements IWalkthrough
     async execAsync()
     {
         const path = `G:/_MyProjects/_MyNodeProjects/wv-gotcha`;
-        Dialog.info(`Please wait for vscode to open`);
-        Dialog.exec(`code \"${path}\"`);
+        Shell.info(`Please wait for vscode to open`);
+        Shell.exec(`code \"${path}\"`);
     }
 }
 
@@ -127,8 +127,8 @@ class WTR_Code_Extension implements IWalkthrough
     async execAsync()
     {
         const path = `G:/_MyProjects/_MyNodeProjects/_FinalCircuits/extension`;
-        Dialog.info(`Please wait for vscode to open`);
-        Dialog.exec(`code \"${path}\"`);
+        Shell.info(`Please wait for vscode to open`);
+        Shell.exec(`code \"${path}\"`);
         // Dialog.exec(`npm run update-dep`, path);
     }
 }
@@ -139,8 +139,8 @@ class WTR_Code_Contracts implements IWalkthrough
     async execAsync()
     {
         const path = `G:/_MyProjects/_MyNodeProjects/_FinalCircuits/contracts`;
-        Dialog.info(`Please wait for vscode to open`);
-        Dialog.exec(`code \"${path}\"`);
+        Shell.info(`Please wait for vscode to open`);
+        Shell.exec(`code \"${path}\"`);
         // Dialog.exec(`npm run update-dep`, path);
     }
 }
@@ -151,8 +151,8 @@ class WTR_Code_LocalService implements IWalkthrough
     async execAsync()
     {
         const path = `G:/_MyProjects/_MyNodeProjects/wv-local-service`;
-        Dialog.info(`Please wait for vscode to open`);
-        Dialog.exec(`code \"${path}\"`);
+        Shell.info(`Please wait for vscode to open`);
+        Shell.exec(`code \"${path}\"`);
     }
 }
 
@@ -162,8 +162,8 @@ class WTR_Code_LocalBroker implements IWalkthrough
     async execAsync()
     {
         const path = `G:/_MyProjects/_MyNodeProjects/wv-local-service-broker`;
-        Dialog.info(`Please wait for vscode to open`);
-        Dialog.exec(`code \"${path}\"`);
+        Shell.info(`Please wait for vscode to open`);
+        Shell.exec(`code \"${path}\"`);
     }
 }
 
@@ -173,7 +173,7 @@ class WTR_BuildView implements IWalkthrough
 
     execAsync(): Promise<void>
     {
-        Dialog.exec('npm run deploy', 'G:/_MyProjects/_MyNodeProjects/_FinalCircuits/extension-view');
+        Shell.exec('npm run deploy', 'G:/_MyProjects/_MyNodeProjects/_FinalCircuits/extension-view');
 
         return Promise.resolve();
     }
@@ -186,7 +186,7 @@ class WTR_RunTempBroker implements IWalkthrough
 
     execAsync(): Promise<void>
     {
-        Dialog.exec('node ./dist/run',`G:/_MyProjects/_MyNodeProjects/wv-local-service-broker`);
+        Shell.exec('node ./dist/run',`G:/_MyProjects/_MyNodeProjects/wv-local-service-broker`);
 
         return Promise.resolve();
     }
@@ -199,7 +199,7 @@ class WTR_CodeWvCore implements IWalkthrough
 
     execAsync(): Promise<void>
     {
-        Dialog.exec('code .',`G:/_MyProjects/_MyDenoProjects/wv_core/wv_core`);
+        Shell.exec('code .',`G:/_MyProjects/_MyDenoProjects/wv_core/wv_core`);
 
         return Promise.resolve();
     }
