@@ -2,7 +2,7 @@ import { DirectoryInfo, FileInfo } from "decova-filesystem";
 import path from "path";
 import { RootCircuit } from "temp-circuits";
 import { Register } from "temp-circuits/dist/Decorators/_Register";
-import { Dialog } from "../../Dialog";
+import { Shell } from "../../Shell";
 import { CommonFileName, UPathMan } from "../../UPathMan";
 import { UTextTranslator } from "./UTextTranslator";
 import { Path } from "wv-filesystem";

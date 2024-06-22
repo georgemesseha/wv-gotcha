@@ -124,6 +124,7 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+.vs/
 
 # yarn v2
 .yarn/cache
@@ -139,6 +140,5 @@ dist
 # Optional stylelint cache
 
 # SvelteKit build / generate output
-.svelte-kit
-
-# End of https://www.toptal.com/developers/gitignore/api/node
+.svelte-kit.toIgnore/
+.toIgnore/

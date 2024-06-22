@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import figlet from "figlet";
 import { Register, RootCircuit } from "temp-circuits";
-import { Dialog } from "./Dialog";
+import { Shell } from "./Shell";
 import { UPathMan } from "./UPathMan";
 const pjson = require('../package.json');
 
@@ -32,7 +32,7 @@ export class UApp extends RootCircuit
         // const promptContinue = new UMcq<string>([`1- Yes`, `0- No`], op => op);
         // const answer = await promptContinue.promptAsync('are you sure?') == `1- Yes`;
 
-        Dialog.pickWalkghrough();
+        Shell.pickWalkghrough();
         
     }
 }
