@@ -801,8 +801,8 @@ export class WTR_GitHardResetToOrigin implements IWalkthrough
         const currentBranch = Git.getCurrentBranch();
         Shell.assert(`Are you aware that you're on branch  ${currentBranch} ?`);
         Shell.assert(`Are you sure you want the current branch to be overwritten by the origin?`);
-        Shell.confirmThenExecAsync("git fetch origin", "Will fetch the origin in local ref");
-        Shell.confirmThenExecAsync(`git reset --hard origin/${currentBranch}`, "Will overwrite the current local branch with the shortly updated local origin ref."); 
+        await Shell.confirmThenExecAsync("git fetch origin", "Will fetch the origin in local ref");
+        await Shell.confirmThenExecAsync(`git reset --hard origin/${currentBranch}`, "Will overwrite the current local branch with the shortly updated local origin ref."); 
     }
 }
 // #endregion
