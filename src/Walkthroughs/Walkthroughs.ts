@@ -830,7 +830,7 @@ export class WTR_GitCreateDeltaBranch implements IWalkthrough
         const deltaBranchName = `delta_${sourceBranch}_${destBranch}_${Shell.getTimeStamp()}`;
 
         await Shell.warning(`The following branches will be overwritten by the origin:`);
-        await Shell.printList("To be overwritten:", [sourceBranch, destBranch]);
+        await Shell.printDangerList("To be overwritten:", [sourceBranch, destBranch]);
         await Shell.assert("ARE YOU SURE?")
 
         await Shell.confirmThenExecAsync("git fetch origin", `Will fetch the origin of the current branch  ${sourceBranch}`);
@@ -853,7 +853,7 @@ export class WTR_GitCreateDeltaBranch implements IWalkthrough
         await Shell.openInBrowser(await Git.getRemoteOriginAsync());
         Shell.ShowCompletion();
 
-        // just making a fake change
+        // just making a fake change 2
     }
 }
 // #endregion
