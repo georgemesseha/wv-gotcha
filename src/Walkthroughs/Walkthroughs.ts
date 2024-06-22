@@ -9,6 +9,7 @@ import { DirectoryInfo, FileInfo, Path } from "decova-filesystem";
 import { Mcq_CircuitsTasks } from "../Mcq_CircuitsTasks";
 import { PackageJson } from "../Libraries/PackageJson/PackageJson";
 import { DirectoryInfo as wvDirectoryInfo, FileInfo as wvFileInfo, Path as wvPath } from "wv-filesystem";
+import { cwd } from "process";
     
 const fs = require('fs');
 const os = require('os');
@@ -743,9 +744,25 @@ export class WTR_GitUntrackFileOrFolder implements IWalkthrough
     text = 'git >> Untrack file or folder'
     async execAsync()
     {
-        const path = await Dialog.askForTextAsync("To untrack File or folder RELATIVE path");
-        await Dialog.exec(`git rm -r ${path}`);
-        await Dialog.instructAsync("Add the following path to .gitignore");
+        let path = (await Dialog.askForTextAsync("To untrack File or folder RELATIVE path")).trim();
+        if(new DirectoryInfo(Path.join(cwd(), path)).Exists())
+        {
+            if(!path.endsWith("/"))
+            {
+                Dialog.warning(`${path} is a directory. I added a trailing '/' for you. But get accustomed to add a trailing '/' to denote a directory in your future git commands.`)   
+                path = `${path}/`;
+            }
+        }
+        else if(!new FileInfo(Path.join(cwd(), path)).exists())
+        {
+            Dialog.error(`Path [${path}] doesn't exist!`);
+            process.exit(0);
+        }
+        
+        await Dialog.confirmThenExecAsync(`git rm --cached -r ${path}`, `This will make a "git change" of untracking the file/folder. To be commited by a next command.`);
+        await Dialog.confirmThenExecAsync(`git status`, `This will run "git status" to make sure of untracking as a change.`)
+        await Dialog.instructAsync(`Add this path  ${path}  as a line to .gitignore.`);
+        await Dialog.ShowCompletion();
     }
 }
 // #endregion
