@@ -843,21 +843,21 @@ export class WTR_GitCreateDeltaBranch implements IWalkthrough
 
         await Shell.assert(`The following branches will be overwritten by the origin:   ${sourceBranch} , ${destBranch}`);
         
-        Shell.confirmThenExecAsync("git fetch origin", `Will fetch the origin of the current branch  ${sourceBranch}`);
-        Shell.confirmThenExecAsync(`git reset --hard origin/${sourceBranch}`, `This will reset the local branch ${sourceBranch} to match the origin!`)
+        await Shell.confirmThenExecAsync("git fetch origin", `Will fetch the origin of the current branch  ${sourceBranch}`);
+        await Shell.confirmThenExecAsync(`git reset --hard origin/${sourceBranch}`, `This will reset the local branch ${sourceBranch} to match the origin!`)
         
 
         const deltaBranchName = `delta_${sourceBranch}_${destBranch}_${Shell.getTimeStamp()}`;
-        Shell.confirmThenExecAsync(`git checkout -b ${deltaBranchName}`, `Will create a delta branch ${deltaBranchName} based on the current branch [The source branch]`);
+        await Shell.confirmThenExecAsync(`git checkout -b ${deltaBranchName}`, `Will create a delta branch ${deltaBranchName} based on the current branch [The source branch]`);
 
-        Shell.confirmThenExecAsync(`git checkout ${destBranch}`, `Will check out the destination branch ${destBranch} for updating it.`);
-        Shell.confirmThenExecAsync(`git fetch origin`, `Will fetch the origin of the current branch  ${destBranch}`);
-        Shell.confirmThenExecAsync(`git reset --hard origin/${destBranch}`, `This will reset the local branch ${destBranch} to match the origin!`)
+        await Shell.confirmThenExecAsync(`git checkout ${destBranch}`, `Will check out the destination branch ${destBranch} for updating it.`);
+        await Shell.confirmThenExecAsync(`git fetch origin`, `Will fetch the origin of the current branch  ${destBranch}`);
+        await Shell.confirmThenExecAsync(`git reset --hard origin/${destBranch}`, `This will reset the local branch ${destBranch} to match the origin!`)
 
-        Shell.confirmThenExecAsync(`git checkout ${deltaBranchName}`, `Will check out the delta branch`);
-        Shell.confirmThenExecAsync(`git merge -s ours ${destBranch}`, `Will merge the destination branch ${destBranch} into the delta branch favoring the delta branch.`);
+        await Shell.confirmThenExecAsync(`git checkout ${deltaBranchName}`, `Will check out the delta branch`);
+        await Shell.confirmThenExecAsync(`git merge -s ours ${destBranch}`, `Will merge the destination branch ${destBranch} into the delta branch favoring the delta branch.`);
 
-        Shell.confirmThenExecAsync(`git push`, `Will push ${deltaBranchName} for making a pull request of it to ${destBranch}`);
+        await Shell.confirmThenExecAsync(`git push`, `Will push ${deltaBranchName} for making a pull request of it to ${destBranch}`);
         await Shell.instructAsync(`I'm opening the remote repo in the browser for you to create a pull request of ${deltaBranchName} into ${destBranch}`);
         Shell.ShowCompletion();
     }
