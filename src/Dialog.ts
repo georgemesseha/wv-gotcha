@@ -63,6 +63,33 @@ export class Dialog
             );
     }
 
+    static async confirmThenExecAsync(cmd: string, explanation: string|undefined = undefined)
+    {
+        Dialog.hintWillExec(cmd);
+        if(explanation)
+        {
+            Dialog.info(explanation);
+        }
+
+        const confirmed = await Dialog.yesOrNoAsync("Continue?");
+        if(confirmed)
+        {
+            Dialog.exec(cmd);
+        }
+        else
+        {
+            Dialog.error("Execution terminated by user!");
+            throw "Execution terminated by user!";
+        }
+    }
+
+    static ShowCompletion()
+    {
+        console.log(
+            ch.greenBright("██████████████████████████████ Completed ██████████████████████████████")
+        );
+    }
+
     static async instructAsync(instruction: string, ackMessage: string | null = null)
     {
         console.log(ch.yellowBright.bold(`♣ ${instruction}`));
@@ -96,7 +123,7 @@ export class Dialog
 
     static info(info: string)
     {
-        console.log(ch.bgYellowBright.green(` i: ${info} `));
+        console.log(ch.bgYellowBright.green(` ${info} `));
     }
 
     static success(message: string)
@@ -115,11 +142,11 @@ export class Dialog
             true);
     }
 
-    static async askForTextAsync(question: string)
+    static async askForTextAsync(question: string): Promise<string>
     {
         // this._showQuestion(question);
         let x = await inquirer.prompt([{ name: "foo", message: question }]).then();
-        return x.foo;
+        return x.foo as string;
     }
 
     static async openExplorerAsync(dirPath: string)
@@ -129,7 +156,7 @@ export class Dialog
 
     static hintWillExec(hint: string)
     {
-        console.log(ch.bgYellow.black(`>>> ${hint}`));
+        console.log(ch.bgRgb(110, 0, 0).white(`>>> ${hint}`));
         // let x = await inquirer.prompt([{name:"foo", message:ch.bgYellow.black(`>>> ${hint}`)}]).then();
         // return x.foo;
     }
